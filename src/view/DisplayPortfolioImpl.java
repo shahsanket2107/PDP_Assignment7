@@ -33,7 +33,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       float totalValue = 0;
       for (int i = 0; i < stocks.size(); i++) {
         String stockName = stocks.get(i).name;
-        double numShares = portfolio.getShares(stockName);
+        int numShares = (int) portfolio.getShares(stockName);
         String price = apiAlphaVantage.getPrice(stockName,
                 "2022-" + months[j], "monthly");
         if (price != null) {
@@ -55,7 +55,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       float totalValue = 0;
       for (int i = 0; i < stocks.size(); i++) {
         String stockName = stocks.get(i).name;
-        double numShares = portfolio.getShares(stockName);
+        int numShares = (int) portfolio.getShares(stockName);
         String price = apiAlphaVantage.getPrice(stockName,
                 "2022-" + months[monthIndex] + "-" + days[j],
                 "daily");
@@ -76,7 +76,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       float totalValue = 0;
       for (int i = 0; i < stocksPort.size(); i++) {
         String stockName = stocksPort.get(i);
-        double numShares = Integer.parseInt(numSharesArr.get(i));
+        int numShares = Integer.parseInt(numSharesArr.get(i));
         String price = apiAlphaVantage.getPrice(stockName,
                 "2022-" + months[j], "monthly");
         totalValue += (Float.parseFloat(price) * numShares);
@@ -95,7 +95,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       float totalValue = 0;
       for (int i = 0; i < stocksPort.size(); i++) {
         String stockName = stocksPort.get(i);
-        double numShares = Integer.parseInt(numSharesArr.get(i));
+        int numShares = Integer.parseInt(numSharesArr.get(i));
         String price = apiAlphaVantage.getPrice(stockName,
                 "2022-" + months[monthIndex] + "-" + days[j],
                 "daily");

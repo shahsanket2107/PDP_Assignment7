@@ -713,18 +713,29 @@ public class MainControllerImpl {
     }
   }
 
-  private static void operationAddStockPortfolio() throws InterruptedException {
+  private static void operationAddStockPortfolio() throws InterruptedException, FileNotFoundException {
     if (text) {
+      System.out.println(model.getAllPortfolioNames());
       print.portfolio();
-      String option = print.readOption();
-      model.addStock(option);
+      String portfolioName = print.readOption();
+      model.buyStock(portfolioName);
+      model.savePortfolio(portfolioName);
+      print.portfolioCreateSuccess(portfolioName);
     } else {
       DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
       String portfolioName = view.getPortfolio(model.getAllPortfolioNames()
               //        + portfolioFileNames.displayPortfolioFileNames(portfolioFiles)
       );
       if (!portfolioName.equals("")) {
-        addStock(portfolioName);
+        ParseFile parseFile = new ParseFileImpl();
+        String stockName = view.getStock(parseFile.getAllStockNames());
+        String[] datePrice = view.getPriceDate(stockName, model);
+        String date = datePrice[0];
+        String price = datePrice[1];
+        String numShares = view.getNumShares(stockName, date, price);
+        model.buyShares(stockName, numShares, date, Float.valueOf(price), text);
+        model.addStockModified(portfolioName, stockName);
+        dialog.buySharesSuccess(stockName, numShares);
         String path = view.getPath();
         model.savePortfolio(portfolioName, path);
         dialog.portfolioSaveSuccess(portfolioName);

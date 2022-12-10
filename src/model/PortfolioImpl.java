@@ -50,7 +50,7 @@ public class PortfolioImpl implements Portfolio {
    * @param stockName the name of the stock
    * @return the number of shares for a stock
    */
-  public double getShares(String stockName) {
+  public float getShares(String stockName) {
     if (portfolio.isEmpty()) {
       return -1;
     }

@@ -41,7 +41,7 @@ public class InvestorImpl implements Investor {
    * @return the number of shares for the stock
    */
   @Override
-  public double getShares(String stockName) {
+  public float getShares(String stockName) {
     return ((InvestorStock) stocks.get(stockName)).numShares;
   }
 
@@ -78,14 +78,14 @@ public class InvestorImpl implements Investor {
   @Override
   public void buyShares(String stockName, String numShares, String datePurchased, float price, boolean text)
           throws FileNotFoundException {
-    if (!containsDigits(numShares)) {
-      throw new IllegalArgumentException("Invalid input for number of shares.");
-    }
+//    if (!containsDigits(numShares)) {
+//      throw new IllegalArgumentException("Invalid input for number of shares.");
+//    }
     float t = 0;
     if (text) {
       t = getTransactionFee();
     }
-    stocks.put(stockName, new InvestorStock(stockName, Double.parseDouble(numShares),
+    stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
             datePurchased, price, t));
     updateCostBasis(stockName, Float.valueOf(numShares), price, t);
   }
@@ -101,11 +101,11 @@ public class InvestorImpl implements Investor {
   @Override
   public void buyShares(String stockName, String numShares, String datePurchased, float price)
           throws FileNotFoundException {
-    if (!containsDigits(numShares)) {
-      throw new IllegalArgumentException("Invalid input for number of shares.");
-    }
+//    if (!containsDigits(numShares)) {
+//      throw new IllegalArgumentException("Invalid input for number of shares.");
+//    }
     float t = getTransactionFee();
-    stocks.put(stockName, new InvestorStock(stockName, Double.parseDouble(numShares),
+    stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
             datePurchased, price, t));
     updateCostBasis(stockName, Float.valueOf(numShares), price, t);
   }
@@ -121,7 +121,10 @@ public class InvestorImpl implements Investor {
   @Override
   public void buyShares(String stockName, String numShares, String datePurchased, float price, float fee)
           throws FileNotFoundException {
-    stocks.put(stockName, new InvestorStock(stockName, Double.parseDouble(numShares),
+//    if (!containsDigits(numShares)) {
+//      throw new IllegalArgumentException("Invalid input for number of shares.");
+//    }
+    stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
             datePurchased, price, fee));
     updateCostBasis(stockName, Float.valueOf(numShares), price, fee);
   }
@@ -210,17 +213,17 @@ public class InvestorImpl implements Investor {
     }
     print.sellStock3();
     String numShares = print.readOption();
-    while (!numShares.matches("[0-9]+") || Double.parseDouble(numShares) % 1 != 0) {
+    while (!numShares.matches("[0-9]+") || Float.valueOf(numShares) % 1 != 0) {
       print.sharesErr1();
       print.shares2();
       numShares = print.readOption();
     }
-    if (stock.numShares == Double.parseDouble(numShares)) {
+    if (stock.numShares == Integer.valueOf(numShares)) {
       stocks.remove(stockName);
       removeStock(stockName);
       updateCostBasis(stockName, 0, 0, getTransactionFee());
-    } else if (stock.numShares > Double.parseDouble(numShares)) {
-      stock.numShares -= Double.parseDouble(numShares);
+    } else if (stock.numShares > Integer.valueOf(numShares)) {
+      stock.numShares -= Integer.valueOf(numShares);
       updateCostBasis(stockName, 0, 0, getTransactionFee());
     } else {
       print.stockErr3(stockName, numShares);
@@ -235,13 +238,13 @@ public class InvestorImpl implements Investor {
   @Override
   public int sellStock(String stockName, String date, String numShares) throws FileNotFoundException {
     InvestorStock stock = (InvestorStock) stocks.get(stockName);
-    if (stock.numShares == Double.parseDouble(numShares)) {
+    if (stock.numShares == Integer.valueOf(numShares)) {
       stocks.remove(stockName);
       removeStock(stockName);
       updateCostBasis(stockName, 0, 0, 0);
       return 0;
-    } else if (stock.numShares > Double.parseDouble(numShares)) {
-      stock.numShares -= Double.parseDouble(numShares);
+    } else if (stock.numShares > Integer.valueOf(numShares)) {
+      stock.numShares -= Integer.valueOf(numShares);
       updateCostBasis(stockName, 0, 0, 0);
       return 1;
     } else {
@@ -463,7 +466,7 @@ public class InvestorImpl implements Investor {
   public static class InvestorStock {
 
     public String name;
-    public double numShares;
+    public float numShares;
     public String datePurchased;
     public float priceWhenBought;
 
@@ -477,7 +480,7 @@ public class InvestorImpl implements Investor {
      * @param datePurchased   the date purchased at
      * @param priceWhenBought the price the stock was bought at
      */
-    public InvestorStock(String name, double numShares,
+    public InvestorStock(String name, float numShares,
                          String datePurchased, float priceWhenBought, float transactionFee) {
       this.name = name;
       this.numShares = numShares;
@@ -492,7 +495,7 @@ public class InvestorImpl implements Investor {
      * @param numShares       the number of shares purchased
      * @param priceWhenBought the price the stock was bought at
      */
-    public InvestorStock(String name, double numShares, float priceWhenBought, float transactionFee) {
+    public InvestorStock(String name, int numShares, float priceWhenBought, float transactionFee) {
       this.name = name;
       this.numShares = numShares;
       this.priceWhenBought = priceWhenBought;

@@ -238,4 +238,18 @@ public interface Model {
    */
   void modifyPortfolioDollarCost(String portfolioName, String[] stockNames, String amount,
                                  String[] weights, String date, boolean text) throws FileNotFoundException;
+
+  /**
+   * Buy stocks for existing portfolio.
+   * @param portfolioName name of the portfolio
+   */
+  public void buyStock(String portfolioName) throws FileNotFoundException;
+
+  /**
+   * Operation to add a stock to portfolio.
+   *
+   * @param portfolioName the name of the portfolio
+   * @throws FileNotFoundException when an invalid file path is provided
+   */
+  public void addStockModified(String portfolioName, String stockName);
 }

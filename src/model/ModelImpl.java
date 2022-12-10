@@ -1,12 +1,9 @@
 package model;
 
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
 
 import view.DisplayPortfolioImpl;
@@ -190,6 +187,17 @@ public class ModelImpl implements Model {
   }
 
   /**
+   * Operation to add a stock to portfolio.
+   *
+   * @param portfolioName the name of the portfolio
+   * @throws FileNotFoundException when an invalid file path is provided
+   */
+  public void addStockModified(String portfolioName, String stockName) {
+    investor.addStock(portfolioName, stockName);
+  }
+
+
+  /**
    * Operation to save a portfolio as a file.
    *
    * @param portfolioName the name of the portfolio to save
@@ -267,6 +275,32 @@ public class ModelImpl implements Model {
       print.sharesSuccess(option, stockName);
     }
   }
+
+
+  public void buyStock(String portfolioName) throws FileNotFoundException {
+    print.newStock();
+    String stockName = print.readOption();
+    ParseFile newPortfolioFile = new ParseFileImpl();
+    if (!newPortfolioFile.validStock(stockName)) {
+      buyStock();
+    } else {
+      String[] datePrice = operationGetPrice(stockName);
+      String date = datePrice[0];
+      String price = datePrice[1];
+      print.shares1();
+      String option = print.readOption();
+      while (!option.matches("[0-9]+") || Float.valueOf(option) % 1 != 0) {
+        print.sharesErr1();
+        print.shares1();
+        option = print.readOption();
+      }
+      buyShares(stockName, option, date, Float.valueOf(price));
+      investor.addStock(portfolioName, stockName);
+
+      print.sharesSuccess(option, stockName);
+    }
+  }
+
 
   public String getPriceOnDate(String stockName, String date) throws FileNotFoundException {
     print.newStock();
@@ -409,7 +443,7 @@ public class ModelImpl implements Model {
     String[] contentsArr = contents.trim().split("\\s+");
     for (int i = 0; i < contentsArr.length; i++) {
       float priceWhenBought = Float.parseFloat(contentsArr[2]);
-      double numShares = Integer.parseInt(contentsArr[3]);
+      int numShares = Integer.parseInt(contentsArr[3]);
       totalInvestments += (priceWhenBought * numShares);
     }
     return totalInvestments;
@@ -522,7 +556,7 @@ public class ModelImpl implements Model {
         if (price.equals("-1")) {
           price = "1";
         }
-        double numShares = amtForStock / Float.parseFloat(price);
+        float numShares = (amtForStock / Float.parseFloat(price));
         // buy shares of stock
         buyShares(stockName, String.valueOf(numShares), dateFormatted, Float.parseFloat(price), Float.parseFloat(result));
         // add the stock to portfolio
@@ -549,7 +583,7 @@ public class ModelImpl implements Model {
       if (price.equals("-1")) {
         price = "1";
       }
-      double numShares = amtForStock / Float.parseFloat(price);
+      float numShares = (amtForStock / Float.parseFloat(price));
       // buy shares of stock
       buyShares(stockName, String.valueOf(numShares), date, Float.parseFloat(price), Float.parseFloat(result));
       // add the stock to portfolio

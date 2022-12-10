@@ -15,7 +15,7 @@ public interface Investor {
    * @param stockName the name of the stock to get the number of shares for
    * @return the number of shares for the stock
    */
-  double getShares(String stockName);
+  float getShares(String stockName);
 
   /**
    * Create a new portfolio.

@@ -20,7 +20,7 @@ public interface Portfolio {
    * @param stockName the name of the stock
    * @return the number of shares for a stock
    */
-  double getShares(String stockName);
+  float getShares(String stockName);
 
   /**
    * Examine the contents of a portfolio.

@@ -61,7 +61,7 @@ public class GUIFrame extends JFrame implements
             + "portfolio on a certain date");
     radioButtons[5] = new JRadioButton("6. Determine the cost basis of a portfolio on a certain date");
     radioButtons[6] = new JRadioButton("7. Load a Portfolio");
-    radioButtons[7] = new JRadioButton("8. Add stock to existing Portfolio");
+    radioButtons[7] = new JRadioButton("8. Buy shares of a stock for an existing portfolio");
     radioButtons[8] = new JRadioButton("9. Create a Portfolio with Start-to-Finish Dollar Cost Averaging");
     radioButtons[9] = new JRadioButton("10. Modify a Portfolio with Dollar Cost Averaging");
 

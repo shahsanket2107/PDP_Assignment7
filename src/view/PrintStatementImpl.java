@@ -33,7 +33,7 @@ public class PrintStatementImpl implements PrintStatement {
   }
 
   public void chooseOption1() {
-    System.out.println("Please select a valid option(1-9): ");
+    System.out.println("Please select a valid option(1-10): ");
   }
 
   public void chooseOption2() {
