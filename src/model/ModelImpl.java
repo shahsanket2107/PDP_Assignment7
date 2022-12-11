@@ -1,9 +1,13 @@
 package model;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import view.DisplayPortfolioImpl;
@@ -370,6 +374,17 @@ public class ModelImpl implements Model {
     return investor.getPrice(stockName, date);
   }
 
+  private boolean dateCompare(String date1, String date2) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    Date temp_date1 = sdf.parse(date1);
+    Date temp_date2 = sdf.parse(date2);
+    if (temp_date1.compareTo(temp_date2) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Get total value of portfolio.
    *
@@ -393,9 +408,18 @@ public class ModelImpl implements Model {
       for (int i = 0; i < contents.size(); i++) {
         String[] tokens = contents.get(i).split(",");
         String currStock = tokens[0];
-        int currNumShares = Integer.parseInt(tokens[3]);
-        float currPrice = Float.parseFloat(ParseFileImpl.getPrice(currStock, date));
-        totalValueOfPortfolio += (currPrice * currNumShares);
+        float currNumShares = Float.parseFloat(tokens[3]);
+        String date1 = tokens[1];
+        boolean check = false;
+        try {
+          check = dateCompare(date, date1);
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+        if (check) {
+          float currPrice = Float.parseFloat(ParseFileImpl.getPrice(currStock, date));
+          totalValueOfPortfolio += (currPrice * currNumShares);
+        }
       }
     }
     if (investorContains) {
@@ -565,6 +589,75 @@ public class ModelImpl implements Model {
 
     }
   }
+
+  private ArrayList<String> getContentsTillADate(String date, ArrayList<String> contents) {
+    ArrayList<String> ans = new ArrayList<>();
+    for (int i = 0; i < contents.size(); i++) {
+      String[] tokens = contents.get(i).split(",");
+      String date1 = tokens[1];
+      boolean check = false;
+      try {
+        check = dateCompare(date, date1);
+      } catch (ParseException e) {
+        throw new IllegalArgumentException(e.getMessage());
+      }
+      if (check) {
+        ans.add(contents.get(i));
+      }
+    }
+    return ans;
+  }
+
+  @Override
+  public void reBalance(String portfolioName, String amount,
+                        String[] stocks, String[] weights, String date)
+          throws IllegalArgumentException {
+//    if (portfolioFilesContains) {
+//      ArrayList<String> tempContents = (ArrayList<String>) portfolioFiles.get(portfolioName);
+//      if (tempContents.size() == 0) {
+//        throw new IllegalArgumentException("No portfolios exist!!");
+//      }
+//      ArrayList<String> contents = getContentsTillADate(date, tempContents);
+    int k = 0;
+    for (String stockName : stocks) {
+      String price;
+      try {
+        price = investor.getPrice(stockName, date);
+      } catch (IOException e) {
+        price = "1";
+      }
+      float amtForStock = Float.parseFloat(amount) * (Float.parseFloat(weights[k++]) / 100);
+      if (price.equals("-1")) {
+        price = "1";
+      }
+      float numShares = (amtForStock / Float.parseFloat(price));
+      investor.updateStock(stockName, String.valueOf(numShares), date, amtForStock);
+      investor.addStock(portfolioName, stockName);
+    }
+
+//      for (int i = 0; i < contents.size(); i++) {
+//        String[] tokens = contents.get(i).split(",");
+//        String currStock = tokens[0];
+//        float currNumShares = Float.parseFloat(tokens[3]);
+//        String date1 = tokens[1];
+//        boolean check = false;
+//        try {
+//          check = dateCompare(date, date1);
+//        } catch (ParseException e) {
+//          throw new IllegalArgumentException(e.getMessage());
+//        }
+//        if (check) {
+//          try {
+//            float currPrice = Float.parseFloat(ParseFileImpl.getPrice(currStock, date));
+//            totalValueOfPortfolio += (currPrice * currNumShares);
+//          } catch (IOException e) {
+//            throw new IllegalArgumentException(e.getMessage());
+//          }
+//
+//        }
+//      }
+  }
+
 
   @Override
   public void modifyPortfolioDollarCost(String portfolioName, String[] stockNames,

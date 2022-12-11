@@ -241,9 +241,10 @@ public interface Model {
 
   /**
    * Buy stocks for existing portfolio.
+   *
    * @param portfolioName name of the portfolio
    */
-  public void buyStock(String portfolioName) throws FileNotFoundException;
+  void buyStock(String portfolioName) throws FileNotFoundException;
 
   /**
    * Operation to add a stock to portfolio.
@@ -251,5 +252,8 @@ public interface Model {
    * @param portfolioName the name of the portfolio
    * @throws FileNotFoundException when an invalid file path is provided
    */
-  public void addStockModified(String portfolioName, String stockName);
+  void addStockModified(String portfolioName, String stockName);
+
+  void reBalance(String portfolioName, String amount,
+                 String[] stocks, String[] weights, String date);
 }

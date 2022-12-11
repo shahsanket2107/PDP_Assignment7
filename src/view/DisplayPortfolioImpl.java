@@ -1,6 +1,9 @@
 package view;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import model.Investor;
@@ -286,24 +289,45 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
     System.out.println();
   }
 
+  private boolean dateCompare(String date1, String date2) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    Date temp_date1 = sdf.parse(date1);
+    Date temp_date2 = sdf.parse(date2);
+    if (temp_date1.compareTo(temp_date2) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @Override
   public void displayContents(ArrayList<String> contents, String date) {
     System.out.println("The composition of the portfolio for the date: " + date);
-    System.out.printf("%-20s %20s %20s %n", "TICKER|", "DATE|", "STOCK PRICE|");
+    System.out.printf("%-20s %20s %20s %20s %n", "TICKER|", "DATE|", "QUANTITY|", "STOCK PRICE|");
     System.out.print("--------------------------------------------------------------");
     for (int i = 0; i < contents.size(); i++) {
       System.out.println();
       String[] currStrings = contents.get(i).split(",");
+      String numShares = currStrings[3];
       String tickerSymbol = currStrings[0];
-      System.out.printf("%-20s", tickerSymbol);
-      System.out.printf("%20s", date);
+      String date1 = currStrings[1];
+      boolean check = false;
       try {
-        double price = Double.parseDouble(stockPrices.getPrice(tickerSymbol, date));
-        System.out.printf("%20s", String.format("%.02f", price));
-      } catch (Exception e) {
+        check = dateCompare(date, date1);
+      } catch (ParseException e) {
         e.printStackTrace();
       }
-
+      if (check) {
+        System.out.printf("%-20s", tickerSymbol);
+        System.out.printf("%20s", date);
+        System.out.printf("%20s", numShares);
+        try {
+          double price = Double.parseDouble(stockPrices.getPrice(tickerSymbol, date));
+          System.out.printf("%20s", String.format("%.02f", price));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
     }
     System.out.println();
   }

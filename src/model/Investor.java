@@ -182,5 +182,14 @@ public interface Investor {
    */
   void loadStock(String portfolioName, ArrayList<String> contents) throws FileNotFoundException;
 
+  /**
+   * Updates the stock map after rebalancing of the portfolio.
+   *
+   * @param stockName     is the name of the stock that is updated.
+   * @param numShares     is the number of shares of that stock.
+   * @param datePurchased is the date at which the latest stock was bought/updated.
+   * @param price         is the price of the stock at that date.
+   */
+  void updateStock(String stockName, String numShares, String datePurchased, float price);
 
 }

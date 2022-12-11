@@ -129,6 +129,12 @@ public class InvestorImpl implements Investor {
     updateCostBasis(stockName, Float.valueOf(numShares), price, fee);
   }
 
+  @Override
+  public void updateStock(String stockName, String numShares, String datePurchased, float price) {
+    stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
+            datePurchased, price, 0));
+  }
+
   /**
    * Returns the price of given stock at a date.
    *
@@ -218,12 +224,12 @@ public class InvestorImpl implements Investor {
       print.shares2();
       numShares = print.readOption();
     }
-    if (stock.numShares == Integer.valueOf(numShares)) {
+    if (stock.numShares == Float.valueOf(numShares)) {
       stocks.remove(stockName);
       removeStock(stockName);
       updateCostBasis(stockName, 0, 0, getTransactionFee());
-    } else if (stock.numShares > Integer.valueOf(numShares)) {
-      stock.numShares -= Integer.valueOf(numShares);
+    } else if (stock.numShares > Float.valueOf(numShares)) {
+      stock.numShares -= Float.valueOf(numShares);
       updateCostBasis(stockName, 0, 0, getTransactionFee());
     } else {
       print.stockErr3(stockName, numShares);
@@ -238,13 +244,13 @@ public class InvestorImpl implements Investor {
   @Override
   public int sellStock(String stockName, String date, String numShares) throws FileNotFoundException {
     InvestorStock stock = (InvestorStock) stocks.get(stockName);
-    if (stock.numShares == Integer.valueOf(numShares)) {
+    if (stock.numShares == Float.valueOf(numShares)) {
       stocks.remove(stockName);
       removeStock(stockName);
       updateCostBasis(stockName, 0, 0, 0);
       return 0;
-    } else if (stock.numShares > Integer.valueOf(numShares)) {
-      stock.numShares -= Integer.valueOf(numShares);
+    } else if (stock.numShares > Float.valueOf(numShares)) {
+      stock.numShares -= Float.valueOf(numShares);
       updateCostBasis(stockName, 0, 0, 0);
       return 1;
     } else {

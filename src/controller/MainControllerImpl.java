@@ -1,7 +1,10 @@
 package controller;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -150,12 +153,96 @@ public class MainControllerImpl {
       case 10:
         operationAddMultipleStocksToPortfolio();
         break;
+      case 11:
+        rebalancePortfolio();
+        break;
       default:
         /*
         No action for default case.
          */
         break;
     }
+  }
+
+  private static boolean dateCompare(String date1, String date2) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    Date temp_date1 = sdf.parse(date1);
+    Date temp_date2 = sdf.parse(date2);
+    if (temp_date1.compareTo(temp_date2) >= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static ArrayList<String> getContentsTillADate(String date, ArrayList<String> contents) {
+    ArrayList<String> ans = new ArrayList<>();
+    for (int i = 0; i < contents.size(); i++) {
+      String[] tokens = contents.get(i).split(",");
+      String date1 = tokens[1];
+      boolean check = false;
+      try {
+        check = dateCompare(date, date1);
+      } catch (ParseException e) {
+        throw new IllegalArgumentException(e.getMessage());
+      }
+      if (check) {
+        ans.add(contents.get(i));
+      }
+    }
+    return ans;
+  }
+
+  private static String helperGetPortfolio() {
+    String allPortfolios = model.getAllPortfolioNames();
+    DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
+    if (allPortfolios.equals("") && portfolioFiles.isEmpty()) {
+      if (text) {
+        print.portfoliosNotFound();
+      } else {
+        dialog.portfoliosNotFound();
+      }
+      return null;
+    } else {
+      if (text) {
+        print.displayPortfolios(allPortfolios,
+                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+      }
+    }
+    String portfolioName;
+    if (text) {
+      portfolioName = print.readOption();
+    } else {
+      try {
+        portfolioName = view.getPortfolio(allPortfolios
+                + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+      } catch (InterruptedException e) {
+        throw new IllegalArgumentException("Thread not yet finished!");
+      }
+    }
+    return portfolioName;
+  }
+
+  private static ArrayList<String> helperGetContents(String portfolioName) {
+    boolean portfolioFilesContains = portfolioFiles.containsKey(portfolioName);
+    ArrayList<String> contents = null;
+    if (portfolioFilesContains) {
+      contents = (ArrayList<String>) portfolioFiles.get(portfolioName);
+    }
+    return contents;
+  }
+
+  private static void rebalancePortfolio() throws InterruptedException {
+    String portfolioName = helperGetPortfolio();
+    Portfolio port = model.getPortfolio(portfolioName);
+    ArrayList<String> tempContents = helperGetContents(portfolioName);
+    String date;
+    if (text) {
+      date = model.getDate();
+    } else {
+      date = view.getDate();
+    }
+    ArrayList<String> contents = getContentsTillADate(date, tempContents);
   }
 
   private static void operationAddMultipleStocksToPortfolio()
