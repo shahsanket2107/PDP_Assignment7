@@ -12,8 +12,8 @@ public interface MainController {
   /**
    * Main function to run the program and initialize the investor and portfolios.
    *
-   * @param args packed arguments
-   * @throws FileNotFoundException when an invalid file path is provided
+   * @param args packed arguments.
+   * @throws FileNotFoundException when an invalid file path is provided.
    */
   void main(String[] args) throws FileNotFoundException;
 
