@@ -8,7 +8,11 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import javax.swing.text.html.HTMLDocument;
 
 import view.DisplayPortfolioImpl;
 import view.PrintStatement;
@@ -612,12 +616,6 @@ public class ModelImpl implements Model {
   public void reBalance(String portfolioName, String amount,
                         String[] stocks, String[] weights, String date)
           throws IllegalArgumentException {
-//    if (portfolioFilesContains) {
-//      ArrayList<String> tempContents = (ArrayList<String>) portfolioFiles.get(portfolioName);
-//      if (tempContents.size() == 0) {
-//        throw new IllegalArgumentException("No portfolios exist!!");
-//      }
-//      ArrayList<String> contents = getContentsTillADate(date, tempContents);
     int k = 0;
     for (String stockName : stocks) {
       String price;
@@ -631,31 +629,15 @@ public class ModelImpl implements Model {
         price = "1";
       }
       float numShares = (amtForStock / Float.parseFloat(price));
+      System.out.println(stockName + "@" + numShares);
       investor.updateStock(stockName, String.valueOf(numShares), date, amtForStock);
-      investor.addStock(portfolioName, stockName);
+    }
+    Iterator<InvestorImpl.InvestorStock> stocksList = investor.getAllStocks();
+    while (stocksList.hasNext()) {
+      InvestorImpl.InvestorStock temp = stocksList.next();
+      System.out.println(temp.name + "#" + temp.numShares);
     }
 
-//      for (int i = 0; i < contents.size(); i++) {
-//        String[] tokens = contents.get(i).split(",");
-//        String currStock = tokens[0];
-//        float currNumShares = Float.parseFloat(tokens[3]);
-//        String date1 = tokens[1];
-//        boolean check = false;
-//        try {
-//          check = dateCompare(date, date1);
-//        } catch (ParseException e) {
-//          throw new IllegalArgumentException(e.getMessage());
-//        }
-//        if (check) {
-//          try {
-//            float currPrice = Float.parseFloat(ParseFileImpl.getPrice(currStock, date));
-//            totalValueOfPortfolio += (currPrice * currNumShares);
-//          } catch (IOException e) {
-//            throw new IllegalArgumentException(e.getMessage());
-//          }
-//
-//        }
-//      }
   }
 
 

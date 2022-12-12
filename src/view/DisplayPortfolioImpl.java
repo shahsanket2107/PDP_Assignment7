@@ -304,7 +304,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   public void displayContents(ArrayList<String> contents, String date) {
     System.out.println("The composition of the portfolio for the date: " + date);
     System.out.printf("%-20s %20s %20s %20s %n", "TICKER|", "DATE|", "QUANTITY|", "STOCK PRICE|");
-    System.out.print("--------------------------------------------------------------");
+    System.out.print("-------------------------------------------------------------------------");
     for (int i = 0; i < contents.size(); i++) {
       System.out.println();
       String[] currStrings = contents.get(i).split(",");
@@ -335,20 +335,24 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   @Override
   public void displayContents(String contents, String date) {
     System.out.println("The composition of the portfolio for the date: " + date);
-    System.out.printf("%-20s %20s %20s %n", "TICKER|", "DATE|", "STOCK PRICE|");
-    System.out.print("--------------------------------------------------------------");
+    System.out.printf("%-20s %20s %20s %20s %n", "TICKER|", "DATE|", "QUANTITY|", "STOCK PRICE|");
+    System.out.print("-------------------------------------------------------------------------");
     System.out.println();
     String[] splitContents = contents.trim().split("\\s+");
     ArrayList<String> tickerSymbols = new ArrayList<>();
+    ArrayList<String> quantity = new ArrayList<>();
     int j = 0;
     while (j < splitContents.length) {
       tickerSymbols.add(splitContents[j]);
-      j += 4;
+      j += 3;
+      quantity.add(splitContents[j]);
+      j += 1;
     }
     int i = 0;
     while (i < tickerSymbols.size()) {
       System.out.printf("%-20s", tickerSymbols.get(i));
       System.out.printf("%20s", date);
+      System.out.printf("%20s", quantity.get(i));
       try {
         double price = Double.parseDouble(stockPrices.getPrice(tickerSymbols.get(i), date));
         System.out.printf("%20s", String.format("%.02f", price));

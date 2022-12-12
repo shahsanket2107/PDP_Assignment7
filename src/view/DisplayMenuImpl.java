@@ -26,7 +26,8 @@ public class DisplayMenuImpl implements DisplayMenu {
     System.out.printf("%5s %n", "8. Buy shares of a stock for an existing portfolio");
     System.out.printf("%5s %n", "9. Create a Portfolio with Start-to-Finish Dollar Cost Averaging");
     System.out.printf("%5s %n", "10. Modify a Portfolio with Dollar Cost Averaging");
-    System.out.printf("%5s %n", "Please choose an option(1-10) and hit enter. Enter q to quit...");
+    System.out.printf("%5s %n", "11. Rebalance a portfolio");
+    System.out.printf("%5s %n", "Please choose an option(1-11) and hit enter. Enter q to quit...");
   }
 
 }

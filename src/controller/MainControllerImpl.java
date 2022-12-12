@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import model.Model;
@@ -103,7 +105,8 @@ public class MainControllerImpl {
             && !(option.equals("7"))
             && !(option.equals("8"))
             && !(option.equals("9"))
-            && !(option.equals("10"))) {
+            && !(option.equals("10"))
+            && !(option.equals("11"))) {
       if (option.equals("q")) {
         System.exit(1);
       }
@@ -228,21 +231,76 @@ public class MainControllerImpl {
     ArrayList<String> contents = null;
     if (portfolioFilesContains) {
       contents = (ArrayList<String>) portfolioFiles.get(portfolioName);
+    } else {
+      contents = model.getPortfolio(portfolioName).examinePort();
     }
     return contents;
   }
 
-  private static void rebalancePortfolio() throws InterruptedException {
+  private static void rebalancePortfolio() throws InterruptedException, FileNotFoundException {
     String portfolioName = helperGetPortfolio();
-    Portfolio port = model.getPortfolio(portfolioName);
+    if (portfolioName == null) {
+      return;
+    }
     ArrayList<String> tempContents = helperGetContents(portfolioName);
+    String[] weights;
+    List<String> stock = new ArrayList<>();
+    String[] stockNames;
     String date;
     if (text) {
       date = model.getDate();
     } else {
       date = view.getDate();
     }
+
+    boolean portfolioFilesContains = portfolioFiles.get(portfolioName) != null;
+    boolean investorContains = model.getPortfolio(portfolioName) != null;
     ArrayList<String> contents = getContentsTillADate(date, tempContents);
+    if (portfolioFilesContains) {
+      if (contents.size() != 0) {
+        for (int i = 0; i < contents.size(); i++) {
+          String[] tokens = contents.get(i).split(",");
+          String currStock = tokens[0];
+          String date1 = tokens[1];
+          boolean check = false;
+          try {
+            check = dateCompare(date, date1);
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+          if (check) {
+            stock.add(currStock);
+          }
+        }
+      }
+    }
+    stockNames = stock.toArray(new String[0]);
+    if (text) {
+      int totalWeights = 0;
+      weights = new String[stockNames.length];
+      String option;
+      while (totalWeights != 100) {
+        totalWeights = 0;
+        System.out.println("The list of stocks in the portfolio is: " + Arrays.toString(stockNames));
+        System.out.println("Please lise the corresponding weights(%) "
+                + "for each stock(i.e. 20,40,40): ");
+        option = print.readOption();
+        weights = option.split(",");
+        for (String w : weights) {
+          totalWeights += Integer.parseInt(w);
+        }
+        if (totalWeights != 100) {
+          System.out.println("The weights should sum to 100.");
+        }
+      }
+    } else {
+      // Display stocks in gui.
+      weights = view.getWeights(stockNames);
+    }
+
+    float amount = model.getTotalValueOfPortfolio(portfolioFilesContains, investorContains,
+            portfolioFiles, portfolioName, date);
+    model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights, date);
   }
 
   private static void operationAddMultipleStocksToPortfolio()

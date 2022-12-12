@@ -30,6 +30,13 @@ public interface Portfolio {
   String examine();
 
   /**
+   * Examine the contents of a portfolio.
+   *
+   * @return the contents of a portfolio as an array of strings.
+   */
+  ArrayList<String> examinePort();
+
+  /**
    * Examine the contents of a portfolio, no date.
    *
    * @return the contents of a portfolio as a string
