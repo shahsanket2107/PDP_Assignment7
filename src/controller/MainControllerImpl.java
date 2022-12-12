@@ -256,21 +256,19 @@ public class MainControllerImpl {
     boolean portfolioFilesContains = portfolioFiles.get(portfolioName) != null;
     boolean investorContains = model.getPortfolio(portfolioName) != null;
     ArrayList<String> contents = getContentsTillADate(date, tempContents);
-    if (portfolioFilesContains) {
-      if (contents.size() != 0) {
-        for (int i = 0; i < contents.size(); i++) {
-          String[] tokens = contents.get(i).split(",");
-          String currStock = tokens[0];
-          String date1 = tokens[1];
-          boolean check = false;
-          try {
-            check = dateCompare(date, date1);
-          } catch (ParseException e) {
-            e.printStackTrace();
-          }
-          if (check) {
-            stock.add(currStock);
-          }
+    if (contents.size() != 0) {
+      for (int i = 0; i < contents.size(); i++) {
+        String[] tokens = contents.get(i).split(",");
+        String currStock = tokens[0];
+        String date1 = tokens[1];
+        boolean check = false;
+        try {
+          check = dateCompare(date, date1);
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+        if (check) {
+          stock.add(currStock);
         }
       }
     }
@@ -294,7 +292,6 @@ public class MainControllerImpl {
         }
       }
     } else {
-      // Display stocks in gui.
       weights = view.getWeights(stockNames);
     }
 

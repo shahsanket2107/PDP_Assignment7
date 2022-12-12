@@ -76,7 +76,6 @@ public class PortfolioImpl implements Portfolio {
     for (int i = 0; i < portfolio.size(); i++) {
       result += portfolio.get(i).name + " " + portfolio.get(i).datePurchased + " "
               + portfolio.get(i).priceWhenBought + " " + portfolio.get(i).numShares + " ";
-
     }
     return result;
   }
@@ -87,10 +86,10 @@ public class PortfolioImpl implements Portfolio {
       return port;
     }
     for (int i = 0; i < portfolio.size(); i++) {
-      port.add(portfolio.get(i).name);
-      port.add(portfolio.get(i).datePurchased);
-      port.add(String.valueOf(portfolio.get(i).priceWhenBought));
-      port.add(String.valueOf(portfolio.get(i).numShares));
+      String result = "";
+      result += portfolio.get(i).name + "," + portfolio.get(i).datePurchased + ","
+              + portfolio.get(i).priceWhenBought + "," + portfolio.get(i).numShares;
+      port.add(result);
     }
     return port;
   }

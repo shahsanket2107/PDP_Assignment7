@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.sound.sampled.Port;
 import javax.swing.text.html.HTMLDocument;
 
 import view.DisplayPortfolioImpl;
@@ -428,7 +429,6 @@ public class ModelImpl implements Model {
     }
     if (investorContains) {
       return getTotalValueOfPortfolioInvestor(portfolioName, date);
-
     }
     return totalValueOfPortfolio;
   }
@@ -451,7 +451,7 @@ public class ModelImpl implements Model {
     }
     for (int i = 0; i < contentsArr.length; i++) {
       String currStock = contentsArr[0];
-      int currNumShares = Integer.parseInt(contentsArr[2]);
+      float currNumShares = Float.parseFloat(contentsArr[2]);
       float currPrice = Float.parseFloat(ParseFileImpl.getPrice(currStock, date));
       totalValueOfPortfolio += (currPrice * currNumShares);
     }
@@ -594,22 +594,16 @@ public class ModelImpl implements Model {
     }
   }
 
-  private ArrayList<String> getContentsTillADate(String date, ArrayList<String> contents) {
-    ArrayList<String> ans = new ArrayList<>();
-    for (int i = 0; i < contents.size(); i++) {
-      String[] tokens = contents.get(i).split(",");
-      String date1 = tokens[1];
-      boolean check = false;
-      try {
-        check = dateCompare(date, date1);
-      } catch (ParseException e) {
-        throw new IllegalArgumentException(e.getMessage());
-      }
-      if (check) {
-        ans.add(contents.get(i));
-      }
+  private void savePortfolioHelper(Portfolio portfolio) {
+    ParseFile newPortfolioFile;
+    boolean validPath = false;
+    while (!validPath) {
+      print.portfolioSave();
+      String portfolioPath = print.readOption();
+      newPortfolioFile = new ParseFileImpl();
+      newPortfolioFile.saveFile(portfolioPath, portfolio);
+      validPath = true;
     }
-    return ans;
   }
 
   @Override
@@ -629,15 +623,15 @@ public class ModelImpl implements Model {
         price = "1";
       }
       float numShares = (amtForStock / Float.parseFloat(price));
-      System.out.println(stockName + "@" + numShares);
-      investor.updateStock(stockName, String.valueOf(numShares), date, amtForStock);
+      investor.updateStock(stockName, String.valueOf(numShares), date, Float.parseFloat(price));
     }
+    Portfolio portfolio = new PortfolioImpl(portfolioName);
     Iterator<InvestorImpl.InvestorStock> stocksList = investor.getAllStocks();
     while (stocksList.hasNext()) {
       InvestorImpl.InvestorStock temp = stocksList.next();
-      System.out.println(temp.name + "#" + temp.numShares);
+      portfolio.addStock(temp);
     }
-
+    savePortfolioHelper(portfolio);
   }
 
 
@@ -659,9 +653,7 @@ public class ModelImpl implements Model {
         price = "1";
       }
       float numShares = (amtForStock / Float.parseFloat(price));
-      // buy shares of stock
       buyShares(stockName, String.valueOf(numShares), date, Float.parseFloat(price), Float.parseFloat(result));
-      // add the stock to portfolio
       investor.addStock(portfolioName, stockName);
 
     }
