@@ -607,8 +607,8 @@ public class ModelImpl implements Model {
   }
 
   @Override
-  public void reBalance(String portfolioName, String amount,
-                        String[] stocks, String[] weights, String date)
+  public Portfolio reBalance(String portfolioName, String amount,
+                        String[] stocks, String[] weights, String date, String type)
           throws IllegalArgumentException {
     int k = 0;
     for (String stockName : stocks) {
@@ -631,7 +631,9 @@ public class ModelImpl implements Model {
       InvestorImpl.InvestorStock temp = stocksList.next();
       portfolio.addStock(temp);
     }
-    savePortfolioHelper(portfolio);
+    if(type == "text")
+      savePortfolioHelper(portfolio);
+    return  portfolio;
   }
 
 

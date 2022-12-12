@@ -235,6 +235,14 @@ public class DialogImpl implements Dialog {
             JOptionPane.PLAIN_MESSAGE);
   }
 
+  @Override
+  public void rebalanceSuccess() {
+    JOptionPane.showMessageDialog(frame,
+        "Your portfolio has been successfully rebalanced!",
+        "Success",
+        JOptionPane.PLAIN_MESSAGE);
+  }
+
   /**
    * Feature has not yet been implemented.
    */

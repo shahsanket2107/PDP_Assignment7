@@ -27,11 +27,11 @@ import view.View;
 import view.ViewImpl;
 
 /**
- * The main-entry to the program.
- * The Main Controller class.
- * Responsible for linking the model and view.
+ * The main-entry to the program. The Main Controller class. Responsible for linking the model and
+ * view.
  */
 public class MainControllerImpl {
+
   static DisplayMenu menu = new DisplayMenuImpl();
 
   static PrintStatement print = new PrintStatementImpl();
@@ -98,15 +98,15 @@ public class MainControllerImpl {
   private static int chooseOption() {
     String option = print.readOption();
     while (!(option.equals("1")) && !(option.equals("2"))
-            && !(option.equals("3"))
-            && !(option.equals("4"))
-            && !(option.equals("5"))
-            && !(option.equals("6"))
-            && !(option.equals("7"))
-            && !(option.equals("8"))
-            && !(option.equals("9"))
-            && !(option.equals("10"))
-            && !(option.equals("11"))) {
+        && !(option.equals("3"))
+        && !(option.equals("4"))
+        && !(option.equals("5"))
+        && !(option.equals("6"))
+        && !(option.equals("7"))
+        && !(option.equals("8"))
+        && !(option.equals("9"))
+        && !(option.equals("10"))
+        && !(option.equals("11"))) {
       if (option.equals("q")) {
         System.exit(1);
       }
@@ -124,7 +124,7 @@ public class MainControllerImpl {
    * @throws FileNotFoundException when an invalid file path is provided
    */
   private static void chooseOperation(int option)
-          throws FileNotFoundException, InterruptedException {
+      throws FileNotFoundException, InterruptedException {
     switch (option) {
       case 1:
         operationBuySellStock();
@@ -209,7 +209,7 @@ public class MainControllerImpl {
     } else {
       if (text) {
         print.displayPortfolios(allPortfolios,
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       }
     }
     String portfolioName;
@@ -218,7 +218,7 @@ public class MainControllerImpl {
     } else {
       try {
         portfolioName = view.getPortfolio(allPortfolios
-                + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       } catch (InterruptedException e) {
         throw new IllegalArgumentException("Thread not yet finished!");
       }
@@ -247,6 +247,7 @@ public class MainControllerImpl {
     List<String> stock = new ArrayList<>();
     String[] stockNames;
     String date;
+    ParseFile parseFile = new ParseFileImpl();
     if (text) {
       date = model.getDate();
     } else {
@@ -279,9 +280,10 @@ public class MainControllerImpl {
       String option;
       while (totalWeights != 100) {
         totalWeights = 0;
-        System.out.println("The list of stocks in the portfolio is: " + Arrays.toString(stockNames));
+        System.out.println(
+            "The list of stocks in the portfolio is: " + Arrays.toString(stockNames));
         System.out.println("Please lise the corresponding weights(%) "
-                + "for each stock(i.e. 20,40,40): ");
+            + "for each stock(i.e. 20,40,40): ");
         option = print.readOption();
         weights = option.split(",");
         for (String w : weights) {
@@ -296,12 +298,31 @@ public class MainControllerImpl {
     }
 
     float amount = model.getTotalValueOfPortfolio(portfolioFilesContains, investorContains,
-            portfolioFiles, portfolioName, date);
-    model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights, date);
+        portfolioFiles, portfolioName, date);
+    if (text) {
+      try {
+        Portfolio pf = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
+            date, "text");
+      } catch (Exception e) {
+        print.portfoliosNotFound();
+      }
+      System.out.println("Rebalance Successful");
+    } else {
+      Portfolio pf = null;
+      try {
+        pf = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
+            date, "gui");
+      } catch (Exception e) {
+        print.portfoliosNotFound();
+      }
+      String path = view.getPath();
+      parseFile.saveFile(path, pf);
+      dialog.rebalanceSuccess();
+    }
   }
 
   private static void operationAddMultipleStocksToPortfolio()
-          throws FileNotFoundException, InterruptedException {
+      throws FileNotFoundException, InterruptedException {
     String allPortfolios = model.getAllPortfolioNames();
     DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
     ParseFile parseFile = new ParseFileImpl();
@@ -312,7 +333,7 @@ public class MainControllerImpl {
         return;
       } else {
         print.displayPortfolios(allPortfolios,
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       }
       portfolioName = print.readOption();
     } else {
@@ -321,7 +342,7 @@ public class MainControllerImpl {
         return;
       } else {
         portfolioName = view.getPortfolio(model.getAllPortfolioNames()
-                + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       }
     }
     String[] stockNames;
@@ -331,7 +352,7 @@ public class MainControllerImpl {
     if (text) {
       Portfolio port = model.getPortfolio(portfolioName);
       System.out.println("Please list the stocks you would like to "
-              + "buy separated by commas(i.e. AAPL,EBAY,NI): ");
+          + "buy separated by commas(i.e. AAPL,EBAY,NI): ");
       String option = print.readOption();
       stockNames = option.split(",");
       System.out.println("Please list the amount you would like to invest in dollars(i.e. 2000): ");
@@ -342,7 +363,7 @@ public class MainControllerImpl {
       while (totalWeights != 100) {
         totalWeights = 0;
         System.out.println("Please lise the corresponding weights(%) "
-                + "for each stock(i.e. 20,40,40): ");
+            + "for each stock(i.e. 20,40,40): ");
         option = print.readOption();
         weights = option.split(",");
         for (String w : weights) {
@@ -362,7 +383,7 @@ public class MainControllerImpl {
     model.modifyPortfolioDollarCost(portfolioName, stockNames, amount, weights, date, text);
     if (text) {
       System.out.println("Your portfolio " + portfolioName
-              + " has been updated with the new investment strategy.");
+          + " has been updated with the new investment strategy.");
     } else {
       dialog.portfolioUpdateSuccess(portfolioName);
     }
@@ -385,7 +406,7 @@ public class MainControllerImpl {
     } else {
       if (text) {
         print.displayPortfolios(allPortfolios,
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       }
     }
     String portfolioName;
@@ -393,7 +414,7 @@ public class MainControllerImpl {
       portfolioName = print.readOption();
     } else {
       portfolioName = view.getPortfolio(allPortfolios
-              + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+          + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
     }
     Portfolio port = model.getPortfolio(portfolioName);
     boolean portfolioFilesContains = portfolioFiles.containsKey(portfolioName);
@@ -406,7 +427,7 @@ public class MainControllerImpl {
     String duration;
     if (text) {
       System.out.println("Would you like to view the performance over the past year, 'n' months,"
-              + " or specific month? (year/months/month)");
+          + " or specific month? (year/months/month)");
       duration = print.readOption();
     } else {
       duration = view.compositionOption();
@@ -415,9 +436,9 @@ public class MainControllerImpl {
     if (duration.equals("year")) {
       if (text) {
         performanceDisplay.displayPortfolioPerformance(port,
-                contents,
-                name,
-                "2022");
+            contents,
+            name,
+            "2022");
       } else {
         String[][] data = performanceDisplay.portfolioPerformanceData(port, contents, name, "2022");
         view.portfolioPerformanceYear(portfolioName, data[0], data[1]);
@@ -431,7 +452,7 @@ public class MainControllerImpl {
           System.out.println("The months should be in the format MM-MM");
           timeRangeMonths = print.readOption();
           performanceDisplay.displayPortfolioPerformance(port,
-                  contents, name, timeRangeMonths);
+              contents, name, timeRangeMonths);
         }
       } else {
         dialog.featureNotImplemented();
@@ -447,7 +468,7 @@ public class MainControllerImpl {
           timeRangeMonth = print.readOption();
         }
         performanceDisplay.displayPortfolioPerformance(port,
-                contents, name, timeRangeMonth);
+            contents, name, timeRangeMonth);
       } else {
         dialog.featureNotImplemented();
 
@@ -456,7 +477,7 @@ public class MainControllerImpl {
   }
 
   private static void operationStartToFinishDollarCostAvg()
-          throws FileNotFoundException, InterruptedException {
+      throws FileNotFoundException, InterruptedException {
     String portfolioName;
     DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
     ParseFile parseFile = new ParseFileImpl();
@@ -465,7 +486,7 @@ public class MainControllerImpl {
       String option = print.readOption();
       portfolioName = option;
       while (portfolioFiles.get(portfolioName) != null
-              || model.getPortfolio(portfolioName) != null) {
+          || model.getPortfolio(portfolioName) != null) {
         print.portfolioErr();
         option = print.readOption();
         if (option.equals("q")) {
@@ -475,7 +496,7 @@ public class MainControllerImpl {
       }
     } else {
       portfolioName = view.getPortfolioNew(model.getAllPortfolioNames()
-              + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+          + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
     }
     model.createPortfolio(portfolioName);
     String[] stockNames;
@@ -487,7 +508,7 @@ public class MainControllerImpl {
     boolean dmy;
     if (text) {
       System.out.println("Please list the stocks you would like "
-              + "to buy separated by commas(i.e. AAPL,EBAY,NI): ");
+          + "to buy separated by commas(i.e. AAPL,EBAY,NI): ");
       String option = print.readOption();
       stockNames = option.split(",");
       System.out.println("Please list the amount you would like to invest in dollars(i.e. 2000): ");
@@ -498,7 +519,7 @@ public class MainControllerImpl {
       while (totalWeights != 100) {
         totalWeights = 0;
         System.out.println("Please lise the corresponding weights(%) "
-                + "for each stock(i.e. 20,40,40): ");
+            + "for each stock(i.e. 20,40,40): ");
         option = print.readOption();
         weights = option.split(",");
         for (String w : weights) {
@@ -509,11 +530,11 @@ public class MainControllerImpl {
         }
       }
       System.out.println("Please list the time-range for the purchases in the format of "
-              + "startDate,endDate or startDate only (i.e. 03-12-2001,31-12-2003 03-12-2001): ");
+          + "startDate,endDate or startDate only (i.e. 03-12-2001,31-12-2003 03-12-2001): ");
       option = print.readOption();
       timeRange = option.split(",");
       System.out.println("Please specify the frequency at which "
-              + "you would like to buy them at(days, months, or years): ");
+          + "you would like to buy them at(days, months, or years): ");
       option = print.readOption();
       frequency = option;
       System.out.println("Please specify the amount corresponding to the frequency(30, 15, 2): ");
@@ -528,10 +549,10 @@ public class MainControllerImpl {
       amountOfFrequency = view.getAmountFrequency();
     }
     model.buyMultipleStocks(portfolioName, stockNames, amount,
-            weights, timeRange, frequency, amountOfFrequency, text);
+        weights, timeRange, frequency, amountOfFrequency, text);
     if (text) {
       System.out.println("Your dollar-cost averaged portfolio "
-              + portfolioName + " has been created.");
+          + portfolioName + " has been created.");
     } else {
       dialog.dollarCostSuccess(portfolioName);
     }
@@ -610,7 +631,7 @@ public class MainControllerImpl {
       String option = print.readOption();
       String portfolioName = option;
       while (portfolioFiles.get(portfolioName) != null
-              || model.getPortfolio(portfolioName) != null) {
+          || model.getPortfolio(portfolioName) != null) {
         print.portfolioErr();
         option = print.readOption();
         if (option.equals("q")) {
@@ -666,7 +687,7 @@ public class MainControllerImpl {
         return;
       } else {
         print.displayPortfolios(allPortfolios,
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       }
       String option = print.readOption();
       System.out.println("Would you like to query the composition on a specific date? (y/n)");
@@ -693,11 +714,11 @@ public class MainControllerImpl {
       }
     } else {
       String portfolioName = view.getPortfolio(allPortfolios
-              + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+          + portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       if (!portfolioName.equals("")) {
         if (portfolioFileNames.displayPortfolioFileNames(portfolioFiles).contains(portfolioName)) {
           String rowData = newPortfolioDisplay.getContents(
-                  (ArrayList<String>) portfolioFiles.get(portfolioName));
+              (ArrayList<String>) portfolioFiles.get(portfolioName));
           String[] columns = newPortfolioDisplay.columnNames();
           view.viewComposition(portfolioName, model.parseContents(rowData), columns);
         } else if (allPortfolios.contains(portfolioName)) {
@@ -714,7 +735,8 @@ public class MainControllerImpl {
    *
    * @throws FileNotFoundException when an invalid file path is provided
    */
-  private static void operationValueOfPortfolio() throws FileNotFoundException, InterruptedException {
+  private static void operationValueOfPortfolio()
+      throws FileNotFoundException, InterruptedException {
     String allPortfolios = model.getAllPortfolioNames();
     DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
     if ((allPortfolios.equals("")) && (portfolioFiles.isEmpty())) {
@@ -731,7 +753,7 @@ public class MainControllerImpl {
       boolean investorContains;
       if (text) {
         print.displayPortfolios(model.getAllPortfolioNames(),
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
         String option = print.readOption();
         portfolioFilesContains = portfolioFiles.get(option) != null;
         investorContains = model.getPortfolio(option) != null;
@@ -743,13 +765,13 @@ public class MainControllerImpl {
         date = model.getDate();
       } else {
         portfolioName = view.getPortfolio(model.getAllPortfolioNames() +
-                portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+            portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
         date = view.getDate();
         portfolioFilesContains = portfolioFiles.get(portfolioName) != null;
         investorContains = model.getPortfolio(portfolioName) != null;
       }
       float totalValueOfPortfolio = model.getTotalValueOfPortfolio(portfolioFilesContains,
-              investorContains, portfolioFiles, portfolioName, date);
+          investorContains, portfolioFiles, portfolioName, date);
       if (text) {
         print.value(date, totalValueOfPortfolio);
       } else {
@@ -778,12 +800,12 @@ public class MainControllerImpl {
     String date;
     if (text) {
       print.displayPortfolios(model.getAllPortfolioNames(),
-              portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+          portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       portfolioName = print.readOption();
       date = model.getDate();
     } else {
       portfolioName = view.getPortfolio(model.getAllPortfolioNames() +
-              portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
+          portfolioFileNames.displayPortfolioFileNames(portfolioFiles));
       date = view.getDate();
     }
     boolean loadedPortfolio = portfolioFiles.containsKey(portfolioName);
@@ -794,10 +816,10 @@ public class MainControllerImpl {
     }
     if (text) {
       print.costBasis(date, model.getCostBasis(portfolioName, date,
-              portfolioFiles, loadedPortfolio, totalFees));
+          portfolioFiles, loadedPortfolio, totalFees));
     } else {
       view.costBasisPortfolio(portfolioName, date, model.getCostBasis(portfolioName, date,
-              portfolioFiles, loadedPortfolio, "0"));
+          portfolioFiles, loadedPortfolio, "0"));
     }
   }
 
@@ -807,13 +829,13 @@ public class MainControllerImpl {
    * @throws FileNotFoundException when an invalid file path is provided
    */
   private static void operationPersistPortfolio() throws
-          FileNotFoundException, InterruptedException {
+      FileNotFoundException, InterruptedException {
     String portfolioName = "";
     if (text) {
       print.portfolioLoad();
       portfolioName = print.readOption();
       while (portfolioFiles.get(portfolioName) != null
-              || model.getPortfolio(portfolioName) != null) {
+          || model.getPortfolio(portfolioName) != null) {
         print.portfolioErr();
         portfolioName = print.readOption();
       }
@@ -855,7 +877,8 @@ public class MainControllerImpl {
     }
   }
 
-  private static void operationAddStockPortfolio() throws InterruptedException, FileNotFoundException {
+  private static void operationAddStockPortfolio()
+      throws InterruptedException, FileNotFoundException {
     if (text) {
       System.out.println(model.getAllPortfolioNames());
       print.portfolio();
@@ -866,7 +889,7 @@ public class MainControllerImpl {
     } else {
       DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
       String portfolioName = view.getPortfolio(model.getAllPortfolioNames()
-              //        + portfolioFileNames.displayPortfolioFileNames(portfolioFiles)
+          //        + portfolioFileNames.displayPortfolioFileNames(portfolioFiles)
       );
       if (!portfolioName.equals("")) {
         ParseFile parseFile = new ParseFileImpl();

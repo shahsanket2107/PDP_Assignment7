@@ -138,5 +138,6 @@ public interface Dialog {
    * @param portfolioName name of portfolio.
    */
   void portfolioUpdateSuccess(String portfolioName);
+  void rebalanceSuccess();
 
 }

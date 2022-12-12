@@ -49,7 +49,7 @@ public class GUIFrame extends JFrame implements
 
     radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.PAGE_AXIS));
 
-    JRadioButton[] radioButtons = new JRadioButton[10];
+    JRadioButton[] radioButtons = new JRadioButton[11];
 
     ButtonGroup rGroup = new ButtonGroup();
 
@@ -64,14 +64,14 @@ public class GUIFrame extends JFrame implements
     radioButtons[7] = new JRadioButton("8. Buy shares of a stock for an existing portfolio");
     radioButtons[8] = new JRadioButton("9. Create a Portfolio with Start-to-Finish Dollar Cost Averaging");
     radioButtons[9] = new JRadioButton("10. Modify a Portfolio with Dollar Cost Averaging");
-
+    radioButtons[10] = new JRadioButton("11. Rebalance a portfolio");
     for (int i = 0; i < radioButtons.length; i++) {
       radioButtons[i].setActionCommand("RB" + (i + 1));
       radioButtons[i].addActionListener(this);
       rGroup.add(radioButtons[i]);
       radioPanel.add(radioButtons[i]);
     }
-    radioDisplay = new JLabel("Please choose an option(1-10)...");
+    radioDisplay = new JLabel("Please choose an option(1-11)...");
     radioPanel.add(radioDisplay);
     mainPanel.add(radioPanel);
     JButton enterButton = new JButton("Enter");

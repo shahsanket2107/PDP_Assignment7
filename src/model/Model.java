@@ -254,6 +254,7 @@ public interface Model {
    */
   void addStockModified(String portfolioName, String stockName);
 
-  void reBalance(String portfolioName, String amount,
-                 String[] stocks, String[] weights, String date);
+  Portfolio reBalance(String portfolioName, String amount,
+                 String[] stocks, String[] weights, String date, String type);
+
 }
