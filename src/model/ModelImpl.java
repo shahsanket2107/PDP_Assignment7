@@ -594,21 +594,10 @@ public class ModelImpl implements Model {
     }
   }
 
-  private void savePortfolioHelper(Portfolio portfolio) {
-    ParseFile newPortfolioFile;
-    boolean validPath = false;
-    while (!validPath) {
-      print.portfolioSave();
-      String portfolioPath = print.readOption();
-      newPortfolioFile = new ParseFileImpl();
-      newPortfolioFile.saveFile(portfolioPath, portfolio);
-      validPath = true;
-    }
-  }
 
   @Override
   public Portfolio reBalance(String portfolioName, String amount,
-                        String[] stocks, String[] weights, String date, String type)
+                        String[] stocks, String[] weights, String date)
           throws IllegalArgumentException {
     int k = 0;
     for (String stockName : stocks) {
@@ -631,8 +620,6 @@ public class ModelImpl implements Model {
       InvestorImpl.InvestorStock temp = stocksList.next();
       portfolio.addStock(temp);
     }
-    if(type == "text")
-      savePortfolioHelper(portfolio);
     return  portfolio;
   }
 

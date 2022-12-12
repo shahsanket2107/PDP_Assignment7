@@ -254,7 +254,18 @@ public interface Model {
    */
   void addStockModified(String portfolioName, String stockName);
 
+  /**
+   * This function is used to rebalance a portfolio according to the ratio specified by the user on
+   * a particular date.This rebalancing is done based on total value of portfolio on that date.
+   *
+   * @param portfolioName the name o portfolio
+   * @param amount the total value of portfolio on a particular date
+   * @param stocks the tickers of stocks in the portfolio
+   * @param weights the ratio in which you want to rebalance
+   * @param date the date at which you want to rebalance
+   * @return the updated portfolio after rebalancing
+   */
   Portfolio reBalance(String portfolioName, String amount,
-                 String[] stocks, String[] weights, String date, String type);
+                 String[] stocks, String[] weights, String date);
 
 }

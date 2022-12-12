@@ -236,6 +236,17 @@ public class MainControllerImpl {
     }
     return contents;
   }
+  private static void savePortfolioHelper(Portfolio portfolio) {
+    ParseFile newPortfolioFile;
+    boolean validPath = false;
+    while (!validPath) {
+      print.portfolioSave();
+      String portfolioPath = print.readOption();
+      newPortfolioFile = new ParseFileImpl();
+      newPortfolioFile.saveFile(portfolioPath, portfolio);
+      validPath = true;
+    }
+  }
 
   private static void rebalancePortfolio() throws InterruptedException, FileNotFoundException {
     String portfolioName = helperGetPortfolio();
@@ -299,24 +310,26 @@ public class MainControllerImpl {
 
     float amount = model.getTotalValueOfPortfolio(portfolioFilesContains, investorContains,
         portfolioFiles, portfolioName, date);
+    Portfolio pf = null;
     if (text) {
       try {
-        Portfolio pf = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
-            date, "text");
+         pf= model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
+            date);
       } catch (Exception e) {
         print.portfoliosNotFound();
       }
+      savePortfolioHelper(pf);
       System.out.println("Rebalance Successful");
     } else {
-      Portfolio pf = null;
+      Portfolio pf1 = null;
       try {
-        pf = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
-            date, "gui");
+        pf1 = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
+            date);
       } catch (Exception e) {
         print.portfoliosNotFound();
       }
       String path = view.getPath();
-      parseFile.saveFile(path, pf);
+      parseFile.saveFile(path, pf1);
       dialog.rebalanceSuccess();
     }
   }
