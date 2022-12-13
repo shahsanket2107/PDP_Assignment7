@@ -244,4 +244,7 @@ public class PrintStatementImpl implements PrintStatement {
   public void printOption(String option) {
     System.out.println("\nOption selected: " + option);
   }
+  public void printMessage(String message){
+    System.out.println(message);
+  }
 }

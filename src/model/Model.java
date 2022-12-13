@@ -264,8 +264,9 @@ public interface Model {
    * @param weights the ratio in which you want to rebalance
    * @param date the date at which you want to rebalance
    * @return the updated portfolio after rebalancing
+   * @throws IllegalArgumentException if the weights don't sum up to 100
    */
   Portfolio reBalance(String portfolioName, String amount,
-                 String[] stocks, String[] weights, String date);
+                 String[] stocks, String[] weights, String date) throws IllegalArgumentException;
 
 }

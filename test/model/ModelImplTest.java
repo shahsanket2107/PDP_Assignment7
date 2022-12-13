@@ -94,12 +94,15 @@ public class ModelImplTest {
   }
 
   @Test
-  public void testRebalace() throws FileNotFoundException {
+  public void testCompositionAfterRebalance() throws FileNotFoundException {
     Model model = new ModelImpl();
     ParseFile loadNewFile = new ParseFileImpl();
     loadNewFile.loadFile("sam.csv");
     Map portfolioFiles = new HashMap();
     portfolioFiles.put("test_p1", loadNewFile.getPortfolioContents());
+    ArrayList<String> test = new ArrayList<>();
+    test.add("aapl,11-11-2020,119.49,50.0, a,12-11-2020,109.44,50.0, nflx,12-11-2020,486.77,47.0");
+    assertEquals(test.toString(), loadNewFile.getPortfolioContents().toString());
     String[] stocks = {"aapl", "a", "nflx"};
     String[] weights = {"60", "20", "20"};
     float portfolioValuation = model.getTotalValueOfPortfolio(true,
@@ -111,4 +114,92 @@ public class ModelImplTest {
         + " nflx,17-11-2020,480.63,14.216749");
     assertEquals(a.toString(), p.examinePort().toString());
   }
+
+  @Test
+  public void testValueAfterRebalance() throws FileNotFoundException {
+    Model model = new ModelImpl();
+    ParseFile loadNewFile = new ParseFileImpl();
+    loadNewFile.loadFile("sam.csv");
+    Map portfolioFiles = new HashMap();
+    portfolioFiles.put("test_p1", loadNewFile.getPortfolioContents());
+    String[] stocks = {"aapl", "a", "nflx"};
+    String[] weights = {"60", "20", "20"};
+    float portfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFiles, "test_p1", "13-11-2020");
+    Portfolio p = model.reBalance("test_p1", String.valueOf(portfolioValuation), stocks,
+        weights, "17-11-2020");
+    Map portfolioFilesNew = new HashMap();
+    portfolioFilesNew.put("testNew_p1", p.examinePort());
+    float newPortfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFilesNew, "testNew_p1", "17-11-2020");
+    assertEquals(portfolioValuation, newPortfolioValuation, 0.0);
+  }
+
+  @Test
+  public void testCompositionAndValueAfterRebalance() throws FileNotFoundException {
+    Model model = new ModelImpl();
+    ParseFile loadNewFile = new ParseFileImpl();
+    loadNewFile.loadFile("sam.csv");
+    Map portfolioFiles = new HashMap();
+    portfolioFiles.put("test_p1", loadNewFile.getPortfolioContents());
+    String[] stocks = {"aapl", "a", "nflx"};
+    String[] weights = {"60", "20", "20"};
+    float portfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFiles, "test_p1", "13-11-2020");
+    Portfolio p = model.reBalance("test_p1", String.valueOf(portfolioValuation), stocks,
+        weights, "17-11-2020");
+    Map portfolioFilesNew = new HashMap();
+    portfolioFilesNew.put("testNew_p1", p.examinePort());
+    float newPortfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFilesNew, "testNew_p1", "17-11-2020");
+    ArrayList<String> a = new ArrayList<>();
+    a.add("aapl,17-11-2020,119.39,171.6977, a,17-11-2020,109.86,62.197308,"
+        + " nflx,17-11-2020,480.63,14.216749");
+    assertEquals(a.toString(), p.examinePort().toString());
+    assertEquals(portfolioValuation, newPortfolioValuation, 0.0);
+  }
+
+  @Test
+  public void testCompositionAndValueAfterRebalanceUsingFractionalWeights()
+      throws FileNotFoundException {
+    Model model = new ModelImpl();
+    ParseFile loadNewFile = new ParseFileImpl();
+    loadNewFile.loadFile("sam.csv");
+    Map portfolioFiles = new HashMap();
+    portfolioFiles.put("test_p1", loadNewFile.getPortfolioContents());
+    String[] stocks = {"aapl", "a", "nflx"};
+    String[] weights = {"60.5", "19.3", "20.2"};
+    float portfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFiles, "test_p1", "13-11-2020");
+    Portfolio p = model.reBalance("test_p1", String.valueOf(portfolioValuation), stocks,
+        weights, "17-11-2020");
+    Map portfolioFilesNew = new HashMap();
+    portfolioFilesNew.put("testNew_p1", p.examinePort());
+    float newPortfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFilesNew, "testNew_p1", "17-11-2020");
+    ArrayList<String> a = new ArrayList<>();
+    a.add("aapl,17-11-2020,119.39,173.12852, a,17-11-2020,109.86,60.020397, "
+        + "nflx,17-11-2020,480.63,14.358916");
+    assertEquals(a.toString(), p.examinePort().toString());
+    assertEquals(portfolioValuation, newPortfolioValuation, 0.1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testIllegalWeightsInRebalance() throws FileNotFoundException {
+    Model model = new ModelImpl();
+    ParseFile loadNewFile = new ParseFileImpl();
+    loadNewFile.loadFile("sam.csv");
+    Map portfolioFiles = new HashMap();
+    portfolioFiles.put("test_p1", loadNewFile.getPortfolioContents());
+    ArrayList<String> test = new ArrayList<>();
+    test.add("aapl,11-11-2020,119.49,50.0, a,12-11-2020,109.44,50.0, nflx,12-11-2020,486.77,47.0");
+    assertEquals(test.toString(), loadNewFile.getPortfolioContents().toString());
+    String[] stocks = {"aapl", "a", "nflx"};
+    String[] weights = {"60", "20", "10"};
+    float portfolioValuation = model.getTotalValueOfPortfolio(true,
+        false, portfolioFiles, "test_p1", "13-11-2020");
+    Portfolio p = model.reBalance("test_p1", String.valueOf(portfolioValuation), stocks,
+        weights, "17-11-2020");
+  }
+
 }

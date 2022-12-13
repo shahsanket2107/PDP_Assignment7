@@ -289,4 +289,10 @@ public interface PrintStatement {
    * Print option selected.
    */
   void printOption(String option);
+
+  /**
+   * Prints message inputted as output.
+   * @param message the message to be displayed
+   */
+  void printMessage(String message);
 }

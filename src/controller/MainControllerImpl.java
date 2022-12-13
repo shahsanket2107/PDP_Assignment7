@@ -236,6 +236,7 @@ public class MainControllerImpl {
     }
     return contents;
   }
+
   private static void savePortfolioHelper(Portfolio portfolio) {
     ParseFile newPortfolioFile;
     boolean validPath = false;
@@ -248,25 +249,12 @@ public class MainControllerImpl {
     }
   }
 
-  private static void rebalancePortfolio() throws InterruptedException, FileNotFoundException {
-    String portfolioName = helperGetPortfolio();
-    if (portfolioName == null) {
-      return;
-    }
+  private static String[] rebalanceHelper(String portfolioName, String date) {
     ArrayList<String> tempContents = helperGetContents(portfolioName);
-    String[] weights;
+
     List<String> stock = new ArrayList<>();
     String[] stockNames;
-    String date;
-    ParseFile parseFile = new ParseFileImpl();
-    if (text) {
-      date = model.getDate();
-    } else {
-      date = view.getDate();
-    }
 
-    boolean portfolioFilesContains = portfolioFiles.get(portfolioName) != null;
-    boolean investorContains = model.getPortfolio(portfolioName) != null;
     ArrayList<String> contents = getContentsTillADate(date, tempContents);
     if (contents.size() != 0) {
       for (int i = 0; i < contents.size(); i++) {
@@ -285,48 +273,76 @@ public class MainControllerImpl {
       }
     }
     stockNames = stock.toArray(new String[0]);
+    return stockNames;
+  }
+  private static String[] getWeightsForText(String[] stockNames ) throws IllegalArgumentException{
+    String[] weights;
+    double totalWeights = 0;
+    weights = new String[stockNames.length];
+    String option;
+    while (totalWeights != 100) {
+      totalWeights = 0;
+      print.printMessage(
+          "The list of stocks in the portfolio is: " + Arrays.toString(stockNames));
+      print.printMessage("Please lise the corresponding weights(%) "
+          + "for each stock(i.e. 20,40,40): ");
+      option = print.readOption();
+      weights = option.split(",");
+      for (String w : weights) {
+        totalWeights += Double.parseDouble(w);
+      }
+      if (totalWeights != 100) {
+        throw new IllegalArgumentException("The weights should sum to 100.");
+      }
+    }
+    return weights;
+  }
+
+  private static void rebalancePortfolio() throws InterruptedException, FileNotFoundException {
+    String portfolioName = helperGetPortfolio();
+    if (portfolioName == null) {
+      return;
+    }
+    String date;
     if (text) {
-      int totalWeights = 0;
-      weights = new String[stockNames.length];
-      String option;
-      while (totalWeights != 100) {
-        totalWeights = 0;
-        System.out.println(
-            "The list of stocks in the portfolio is: " + Arrays.toString(stockNames));
-        System.out.println("Please lise the corresponding weights(%) "
-            + "for each stock(i.e. 20,40,40): ");
-        option = print.readOption();
-        weights = option.split(",");
-        for (String w : weights) {
-          totalWeights += Integer.parseInt(w);
-        }
-        if (totalWeights != 100) {
-          System.out.println("The weights should sum to 100.");
-        }
+      date = model.getDate();
+    } else {
+      date = view.getDate();
+    }
+    String[] stockNames = rebalanceHelper(portfolioName, date);
+    boolean portfolioFilesContains = portfolioFiles.get(portfolioName) != null;
+    boolean investorContains = model.getPortfolio(portfolioName) != null;
+    ParseFile parseFile = new ParseFileImpl();
+    String[] weights = null;
+    if (text) {
+      try {
+        weights = getWeightsForText(stockNames);
+      }
+      catch (Exception e){
+        System.out.println(e.getMessage());
       }
     } else {
       weights = view.getWeights(stockNames);
     }
-
     float amount = model.getTotalValueOfPortfolio(portfolioFilesContains, investorContains,
         portfolioFiles, portfolioName, date);
     Portfolio pf = null;
     if (text) {
       try {
-         pf= model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
+        pf = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
             date);
       } catch (Exception e) {
-        print.portfoliosNotFound();
+        System.out.println(e.getMessage());
       }
       savePortfolioHelper(pf);
-      System.out.println("Rebalance Successful");
+      print.printMessage("Rebalance Successful");
     } else {
       Portfolio pf1 = null;
       try {
         pf1 = model.reBalance(portfolioName, String.valueOf(amount), stockNames, weights,
             date);
       } catch (Exception e) {
-        print.portfoliosNotFound();
+        print.printMessage(e.getMessage());
       }
       String path = view.getPath();
       parseFile.saveFile(path, pf1);

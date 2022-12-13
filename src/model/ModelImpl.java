@@ -9,11 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
-import javax.sound.sampled.Port;
-import javax.swing.text.html.HTMLDocument;
 
 import view.DisplayPortfolioImpl;
 import view.PrintStatement;
@@ -29,8 +26,7 @@ public class ModelImpl implements Model {
   private DisplayPortfolioImpl display;
 
   /**
-   * Constructor to initialize the model.
-   * Set the investor, print, and display modules.
+   * Constructor to initialize the model. Set the investor, print, and display modules.
    */
   public ModelImpl() {
     investor = new InvestorImpl();
@@ -83,7 +79,7 @@ public class ModelImpl implements Model {
    * @throws FileNotFoundException when the file path is invalid
    */
   public void buyShares(String stockName, String numShares, String datePurchased, float price)
-          throws FileNotFoundException {
+      throws FileNotFoundException {
     investor.buyShares(stockName, numShares, datePurchased, price);
   }
 
@@ -96,8 +92,9 @@ public class ModelImpl implements Model {
    * @param text      boolean if interface is text-based
    * @throws FileNotFoundException when the file path is invalid
    */
-  public void buyShares(String stockName, String numShares, String datePurchased, float price, boolean text)
-          throws FileNotFoundException {
+  public void buyShares(String stockName, String numShares, String datePurchased, float price,
+      boolean text)
+      throws FileNotFoundException {
     investor.buyShares(stockName, numShares, datePurchased, price, text);
   }
 
@@ -318,7 +315,8 @@ public class ModelImpl implements Model {
     return investor.getPrice(stockName, date);
   }
 
-  public int buyNumberOfShares(String numShares, String stockName, String date, String price) throws FileNotFoundException {
+  public int buyNumberOfShares(String numShares, String stockName, String date, String price)
+      throws FileNotFoundException {
     if (!numShares.matches("[0-9]+") || Float.valueOf(numShares) % 1 != 0) {
       return -1;
     }
@@ -362,7 +360,8 @@ public class ModelImpl implements Model {
     investor.sellStock(stockName);
   }
 
-  public int sellStock(String stockName, String date, String numShares) throws FileNotFoundException {
+  public int sellStock(String stockName, String date, String numShares)
+      throws FileNotFoundException {
     return investor.sellStock(stockName, date, numShares);
   }
 
@@ -402,8 +401,8 @@ public class ModelImpl implements Model {
    * @throws FileNotFoundException if file storing portfolio names is not found.
    */
   public float getTotalValueOfPortfolio(boolean portfolioFilesContains, boolean investorContains,
-                                        Map portfolioFiles, String portfolioName, String date)
-          throws FileNotFoundException {
+      Map portfolioFiles, String portfolioName, String date)
+      throws FileNotFoundException {
     float totalValueOfPortfolio = 0;
     if (portfolioFilesContains) {
       ArrayList<String> contents = (ArrayList<String>) portfolioFiles.get(portfolioName);
@@ -442,7 +441,7 @@ public class ModelImpl implements Model {
    * @throws FileNotFoundException if file storing portfolio names is not found.
    */
   private float getTotalValueOfPortfolioInvestor(String portfolioName, String date)
-          throws FileNotFoundException {
+      throws FileNotFoundException {
     float totalValueOfPortfolio = 0;
     String contents = getPortfolio(portfolioName).examineNoDate();
     String[] contentsArr = contents.trim().split("\\s+");
@@ -478,8 +477,8 @@ public class ModelImpl implements Model {
   }
 
   /**
-   * Calculate cost basis given portfolio name and date.
-   * Includes all the purchases made in that portfolio till that date.
+   * Calculate cost basis given portfolio name and date. Includes all the purchases made in that
+   * portfolio till that date.
    *
    * @param portfolioName   portfolio from which to calculate.
    * @param date            user input date from which to calculate purchases made before.
@@ -489,18 +488,18 @@ public class ModelImpl implements Model {
    * @return cost basis as a float.
    */
   public float getCostBasis(String portfolioName, String date, Map portfolioFiles,
-                            boolean loadedPortfolio, String totalFees) {
+      boolean loadedPortfolio, String totalFees) {
     if (loadedPortfolio) {
       try {
         return getTotalValueOfPortfolio(true, false,
-                portfolioFiles, portfolioName, date) + Float.parseFloat(totalFees);
+            portfolioFiles, portfolioName, date) + Float.parseFloat(totalFees);
       } catch (Exception e) {
         e.printStackTrace();
       }
 
     }
     return getTotalInvestmentsPortfolio(portfolioName, date)
-            + investor.getPortfolio(portfolioName).getTransactionFee(date);
+        + investor.getPortfolio(portfolioName).getTransactionFee(date);
   }
 
   public String[][] parseContents(String contents) {
@@ -519,14 +518,16 @@ public class ModelImpl implements Model {
     return result;
   }
 
-  public void loadStock(String portfolioName, ArrayList<String> contents) throws FileNotFoundException {
+  public void loadStock(String portfolioName, ArrayList<String> contents)
+      throws FileNotFoundException {
     investor.loadStock(portfolioName, contents);
   }
 
   @Override
-  public void buyMultipleStocks(String portfolioName, String[] stockNames, String amount, String[] weights,
-                                String[] timeRange, String frequency, String amountOfFrequency, boolean text)
-          throws FileNotFoundException {
+  public void buyMultipleStocks(String portfolioName, String[] stockNames, String amount,
+      String[] weights,
+      String[] timeRange, String frequency, String amountOfFrequency, boolean text)
+      throws FileNotFoundException {
     // convert time range to days
     String[] startDate = timeRange[0].split("-");
     String yearsStart = startDate[2];
@@ -550,7 +551,7 @@ public class ModelImpl implements Model {
     String modifiedEndDate = yearsEnd + "-" + monthsEnd + "-" + daysEnd;
 
     long numDaysBetween = ChronoUnit.DAYS.between(LocalDate.parse(modifiedStartDate),
-            LocalDate.parse(modifiedEndDate));
+        LocalDate.parse(modifiedEndDate));
 
     int amtFrequencyDays = 0;
     // convert frequency to days
@@ -586,7 +587,8 @@ public class ModelImpl implements Model {
         }
         float numShares = (amtForStock / Float.parseFloat(price));
         // buy shares of stock
-        buyShares(stockName, String.valueOf(numShares), dateFormatted, Float.parseFloat(price), Float.parseFloat(result));
+        buyShares(stockName, String.valueOf(numShares), dateFormatted, Float.parseFloat(price),
+            Float.parseFloat(result));
         // add the stock to portfolio
         investor.addStock(portfolioName, stockName);
       }
@@ -597,9 +599,16 @@ public class ModelImpl implements Model {
 
   @Override
   public Portfolio reBalance(String portfolioName, String amount,
-                        String[] stocks, String[] weights, String date)
-          throws IllegalArgumentException {
+      String[] stocks, String[] weights, String date)
+      throws IllegalArgumentException {
     int k = 0;
+    double totalWeights = 0;
+    for (String w : weights) {
+      totalWeights += Double.parseDouble(w);
+    }
+    if (totalWeights != 100) {
+      throw new IllegalArgumentException("The weights should sum to 100.");
+    }
     for (String stockName : stocks) {
       String price;
       try {
@@ -620,14 +629,14 @@ public class ModelImpl implements Model {
       InvestorImpl.InvestorStock temp = stocksList.next();
       portfolio.addStock(temp);
     }
-    return  portfolio;
+    return portfolio;
   }
 
 
   @Override
   public void modifyPortfolioDollarCost(String portfolioName, String[] stockNames,
-                                        String amount, String[] weights, String date,
-                                        boolean text) throws FileNotFoundException {
+      String amount, String[] weights, String date,
+      boolean text) throws FileNotFoundException {
     String result;
     if (text) {
       result = getCommission();
@@ -642,7 +651,8 @@ public class ModelImpl implements Model {
         price = "1";
       }
       float numShares = (amtForStock / Float.parseFloat(price));
-      buyShares(stockName, String.valueOf(numShares), date, Float.parseFloat(price), Float.parseFloat(result));
+      buyShares(stockName, String.valueOf(numShares), date, Float.parseFloat(price),
+          Float.parseFloat(result));
       investor.addStock(portfolioName, stockName);
 
     }
@@ -666,8 +676,9 @@ public class ModelImpl implements Model {
     return result;
   }
 
-  private void buyShares(String stockName, String numShares, String datePurchased, float price, float fee)
-          throws FileNotFoundException {
+  private void buyShares(String stockName, String numShares, String datePurchased, float price,
+      float fee)
+      throws FileNotFoundException {
     investor.buyShares(stockName, numShares, datePurchased, price, fee);
 
   }
