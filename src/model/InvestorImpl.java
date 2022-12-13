@@ -76,17 +76,15 @@ public class InvestorImpl implements Investor {
    * @throws FileNotFoundException when the file path is invalid
    */
   @Override
-  public void buyShares(String stockName, String numShares, String datePurchased, float price, boolean text)
-          throws FileNotFoundException {
-//    if (!containsDigits(numShares)) {
-//      throw new IllegalArgumentException("Invalid input for number of shares.");
-//    }
+  public void buyShares(String stockName, String numShares, String datePurchased, float price,
+      boolean text)
+      throws FileNotFoundException {
     float t = 0;
     if (text) {
       t = getTransactionFee();
     }
     stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
-            datePurchased, price, t));
+        datePurchased, price, t));
     updateCostBasis(stockName, Float.valueOf(numShares), price, t);
   }
 
@@ -100,13 +98,10 @@ public class InvestorImpl implements Investor {
    */
   @Override
   public void buyShares(String stockName, String numShares, String datePurchased, float price)
-          throws FileNotFoundException {
-//    if (!containsDigits(numShares)) {
-//      throw new IllegalArgumentException("Invalid input for number of shares.");
-//    }
+      throws FileNotFoundException {
     float t = getTransactionFee();
     stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
-            datePurchased, price, t));
+        datePurchased, price, t));
     updateCostBasis(stockName, Float.valueOf(numShares), price, t);
   }
 
@@ -119,20 +114,18 @@ public class InvestorImpl implements Investor {
    * @throws FileNotFoundException when the file path is invalid
    */
   @Override
-  public void buyShares(String stockName, String numShares, String datePurchased, float price, float fee)
-          throws FileNotFoundException {
-//    if (!containsDigits(numShares)) {
-//      throw new IllegalArgumentException("Invalid input for number of shares.");
-//    }
+  public void buyShares(String stockName, String numShares, String datePurchased, float price,
+      float fee)
+      throws FileNotFoundException {
     stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
-            datePurchased, price, fee));
+        datePurchased, price, fee));
     updateCostBasis(stockName, Float.valueOf(numShares), price, fee);
   }
 
   @Override
   public void updateStock(String stockName, String numShares, String datePurchased, float price) {
     stocks.put(stockName, new InvestorStock(stockName, Float.valueOf(numShares),
-            datePurchased, price, 0));
+        datePurchased, price, 0));
   }
 
   /**
@@ -162,10 +155,10 @@ public class InvestorImpl implements Investor {
     if (dayOfMonth < 10) {
       String day = "0" + dayOfMonth;
       date = day + "-" + LocalDate.now().getMonthValue()
-              + "-" + LocalDate.now().getYear();
+          + "-" + LocalDate.now().getYear();
     } else {
       date = LocalDate.now().getDayOfMonth() + "-" + LocalDate.now().getMonthValue()
-              + "-" + LocalDate.now().getYear();
+          + "-" + LocalDate.now().getYear();
     }
     StocksAPI alphaVantageAPI = new StocksAPIAlphaVantageImpl();
     String price = alphaVantageAPI.getPrice(stockName, date, "daily");
@@ -185,19 +178,21 @@ public class InvestorImpl implements Investor {
   public void addStock(String portfolioName, String stockName) {
     if (!portfolios.containsKey(portfolioName)) {
       throw new IllegalArgumentException("Investor does not have a portfolio"
-              + " created under that name");
+          + " created under that name");
     } else if (!stocks.containsKey(stockName)) {
       throw new IllegalArgumentException("Investor does not own stock"
-              + " by that name");
+          + " by that name");
     }
     this.local = true;
     getPortfolio(portfolioName).addStock((InvestorStock) stocks.get(stockName));
   }
 
   @Override
-  public void loadStock(String portfolioName, ArrayList<String> contents) throws FileNotFoundException {
+  public void loadStock(String portfolioName, ArrayList<String> contents)
+      throws FileNotFoundException {
     for (int i = 0; i < contents.size(); i += 4) {
-      buyShares(contents.get((i)), contents.get(i + 3), contents.get(i + 1), Float.valueOf(contents.get(i + 2)), false);
+      buyShares(contents.get((i)), contents.get(i + 3), contents.get(i + 1),
+          Float.valueOf(contents.get(i + 2)), false);
       getPortfolio(portfolioName).addStock((InvestorStock) stocks.get(contents.get(0)));
     }
   }
@@ -242,7 +237,8 @@ public class InvestorImpl implements Investor {
    * @param stockName the name of the stock.
    */
   @Override
-  public int sellStock(String stockName, String date, String numShares) throws FileNotFoundException {
+  public int sellStock(String stockName, String date, String numShares)
+      throws FileNotFoundException {
     InvestorStock stock = (InvestorStock) stocks.get(stockName);
     if (stock.numShares == Float.valueOf(numShares)) {
       stocks.remove(stockName);
@@ -342,7 +338,7 @@ public class InvestorImpl implements Investor {
     while (list.hasNext()) {
       InvestorStock next = list.next();
       result += next.name + " " + next.datePurchased + " "
-              + next.priceWhenBought + " " + next.numShares + " ";
+          + next.priceWhenBought + " " + next.numShares + " ";
     }
     return result;
   }
@@ -401,7 +397,7 @@ public class InvestorImpl implements Investor {
    * @param numShares number of shares bought.
    */
   private void updateCostBasis(String stockName, float price, float numShares,
-                               float transactionFee) {
+      float transactionFee) {
     InvestorStock s = (InvestorStock) stocks.get(stockName);
     if (s != null) {
       s.transactionFee += transactionFee;
@@ -422,13 +418,6 @@ public class InvestorImpl implements Investor {
       option = print.readOption();
     }
     return option;
-  }
-
-  public int validDate(String date) {
-    if (!date.matches("\\d{2}-\\d{2}-\\d{4}")) {
-      return -1;
-    }
-    return 1;
   }
 
   /**
@@ -487,7 +476,7 @@ public class InvestorImpl implements Investor {
      * @param priceWhenBought the price the stock was bought at
      */
     public InvestorStock(String name, float numShares,
-                         String datePurchased, float priceWhenBought, float transactionFee) {
+        String datePurchased, float priceWhenBought, float transactionFee) {
       this.name = name;
       this.numShares = numShares;
       this.datePurchased = datePurchased;

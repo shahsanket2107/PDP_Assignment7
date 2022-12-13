@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Model interface.
- * Entry-point into the model.
+ * Model interface. Entry-point into the model.
  */
 public interface Model {
 
@@ -28,7 +27,21 @@ public interface Model {
    * @throws FileNotFoundException when the file path is invalid
    */
   void buyShares(String stockName, String numShares, String datePurchased, float price)
-          throws FileNotFoundException;
+      throws FileNotFoundException;
+
+  /**
+   * Buy shares -- text/gui.
+   *
+   * @param stockName     the name of the stock
+   * @param numShares     the number of shares to buy
+   * @param datePurchased the date the shares were purchased
+   * @param price         price of the stock
+   * @param text          if the view is text-based or not(true if it is, false otherwise)
+   * @throws FileNotFoundException when the file path is invalid
+   */
+  void buyShares(String stockName, String numShares, String datePurchased, float price,
+      boolean text)
+      throws FileNotFoundException;
 
   /**
    * Get a portfolio.
@@ -105,6 +118,13 @@ public interface Model {
   void buyStock() throws FileNotFoundException;
 
   /**
+   * Buy stocks for existing portfolio.
+   *
+   * @param portfolioName name of the portfolio
+   */
+  void buyStock(String portfolioName) throws FileNotFoundException;
+
+  /**
    * Sell shares of a stock.
    */
   void sellStock() throws FileNotFoundException;
@@ -142,12 +162,12 @@ public interface Model {
    * @throws FileNotFoundException if file storing portfolio names is not found.
    */
   float getTotalValueOfPortfolio(boolean portfolioFilesContains, boolean investorContains,
-                                 Map portfolioFiles, String portfolioName, String date)
-          throws FileNotFoundException;
+      Map portfolioFiles, String portfolioName, String date)
+      throws FileNotFoundException;
 
   /**
-   * Calculate cost basis given portfolio name and date.
-   * Includes all the purchases made in that portfolio till that date.
+   * Calculate cost basis given portfolio name and date. Includes all the purchases made in that
+   * portfolio till that date.
    *
    * @param portfolioName   portfolio from which to calculate.
    * @param date            user input date from which to calculate purchases made before.
@@ -157,7 +177,7 @@ public interface Model {
    * @return cost basis as a float.
    */
   float getCostBasis(String portfolioName, String date, Map portfolioFiles,
-                     boolean loadedPortfolio, String totalFees) throws FileNotFoundException;
+      boolean loadedPortfolio, String totalFees) throws FileNotFoundException;
 
   /**
    * Get the price of a stock on a given date, using user input.
@@ -177,22 +197,10 @@ public interface Model {
    * @param date      the date to buy the stock on
    * @param price     the price of the stock
    * @return 1 if bought successfully, -1 otherwise
-   * @throws FileNotFoundException
+   * @throws FileNotFoundException if file is not found.
    */
-  int buyNumberOfShares(String numShares, String stockName, String date, String price) throws FileNotFoundException;
-
-  /**
-   * Buy shares -- text/gui
-   *
-   * @param stockName     the name of the stock
-   * @param numShares     the number of shares to buy
-   * @param datePurchased the date the shares were purchased
-   * @param price         price of the stock
-   * @param text          if the view is text-based or not(true if it is, false otherwise)
-   * @throws FileNotFoundException
-   */
-  void buyShares(String stockName, String numShares, String datePurchased, float price, boolean text)
-          throws FileNotFoundException;
+  int buyNumberOfShares(String numShares, String stockName, String date, String price)
+      throws FileNotFoundException;
 
   /**
    * Parse the contents of a portfolio.
@@ -224,8 +232,8 @@ public interface Model {
    * @param text              true if interface is text-based
    */
   void buyMultipleStocks(String portfolioName, String[] stockNames, String amount, String[] weights,
-                         String[] timeRange, String frequency, String amountOfFrequency, boolean text)
-          throws FileNotFoundException;
+      String[] timeRange, String frequency, String amountOfFrequency, boolean text)
+      throws FileNotFoundException;
 
   /**
    * Modify a portfolio using dollar cost average.
@@ -237,14 +245,8 @@ public interface Model {
    * @param text          true if interface is text-based
    */
   void modifyPortfolioDollarCost(String portfolioName, String[] stockNames, String amount,
-                                 String[] weights, String date, boolean text) throws FileNotFoundException;
+      String[] weights, String date, boolean text) throws FileNotFoundException;
 
-  /**
-   * Buy stocks for existing portfolio.
-   *
-   * @param portfolioName name of the portfolio
-   */
-  void buyStock(String portfolioName) throws FileNotFoundException;
 
   /**
    * Operation to add a stock to portfolio.
@@ -259,14 +261,14 @@ public interface Model {
    * a particular date.This rebalancing is done based on total value of portfolio on that date.
    *
    * @param portfolioName the name o portfolio
-   * @param amount the total value of portfolio on a particular date
-   * @param stocks the tickers of stocks in the portfolio
-   * @param weights the ratio in which you want to rebalance
-   * @param date the date at which you want to rebalance
+   * @param amount        the total value of portfolio on a particular date
+   * @param stocks        the tickers of stocks in the portfolio
+   * @param weights       the ratio in which you want to rebalance
+   * @param date          the date at which you want to rebalance
    * @return the updated portfolio after rebalancing
    * @throws IllegalArgumentException if the weights don't sum up to 100
    */
   Portfolio reBalance(String portfolioName, String amount,
-                 String[] stocks, String[] weights, String date) throws IllegalArgumentException;
+      String[] stocks, String[] weights, String date) throws IllegalArgumentException;
 
 }

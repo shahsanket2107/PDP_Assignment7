@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import javax.sound.sampled.Port;
 import org.junit.Before;
 import org.junit.Test;
 

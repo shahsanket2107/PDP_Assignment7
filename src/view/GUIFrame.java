@@ -1,14 +1,27 @@
 package view;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
-import javax.swing.*;
+import java.util.Enumeration;
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -18,24 +31,26 @@ import javax.swing.event.ListSelectionListener;
  */
 
 public class GUIFrame extends JFrame implements
-        ActionListener, ItemListener, ListSelectionListener {
+    ActionListener, ItemListener, ListSelectionListener {
+
   private JPanel mainPanel;
-  private JScrollPane mainScrollPane;
   private JLabel radioDisplay;
   private int selectedRadioButton = 0;
   private String stock = "";
   final String[] months = {"January", "February", "March", "April", "May", "June", "July", "August",
-          "September", "October", "November", "December"};
+      "September", "October", "November", "December"};
 
+  /**
+   * Constructor for GUI.
+   */
   public GUIFrame() {
     super();
     setTitle("Stocks");
     setSize(600, 800);
 
-
     mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-    mainScrollPane = new JScrollPane(mainPanel);
+    JScrollPane mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
   }
 
@@ -58,11 +73,13 @@ public class GUIFrame extends JFrame implements
     radioButtons[2] = new JRadioButton("3. View the composition of a Portfolio");
     radioButtons[3] = new JRadioButton("4. View the performance of a Portfolio");
     radioButtons[4] = new JRadioButton("5. Determine the total value of a "
-            + "portfolio on a certain date");
-    radioButtons[5] = new JRadioButton("6. Determine the cost basis of a portfolio on a certain date");
+        + "portfolio on a certain date");
+    radioButtons[5] = new JRadioButton(
+        "6. Determine the cost basis of a portfolio on a certain date");
     radioButtons[6] = new JRadioButton("7. Load a Portfolio");
     radioButtons[7] = new JRadioButton("8. Buy shares of a stock for an existing portfolio");
-    radioButtons[8] = new JRadioButton("9. Create a Portfolio with Start-to-Finish Dollar Cost Averaging");
+    radioButtons[8] = new JRadioButton(
+        "9. Create a Portfolio with Start-to-Finish Dollar Cost Averaging");
     radioButtons[9] = new JRadioButton("10. Modify a Portfolio with Dollar Cost Averaging");
     radioButtons[10] = new JRadioButton("11. Rebalance a portfolio");
     for (int i = 0; i < radioButtons.length; i++) {
@@ -130,8 +147,7 @@ public class GUIFrame extends JFrame implements
   }
 
   /**
-   * Asks user if they want to add a stock to newly created portfolio,
-   * records selection.
+   * Asks user if they want to add a stock to newly created portfolio, records selection.
    */
   public void addStock() {
     clear();
@@ -389,7 +405,7 @@ public class GUIFrame extends JFrame implements
     clear();
 
     JLabel l1 = new JLabel("The price of " + stockName + " on "
-            + date + " is $" + price);
+        + date + " is $" + price);
     JLabel l2 = new JLabel("Enter number of shares...");
     JButton b = new JButton("Enter");
     b.addActionListener(this);
@@ -413,7 +429,8 @@ public class GUIFrame extends JFrame implements
   public void getAmountInvest() {
     clear();
 
-    JLabel l = new JLabel("Please list the amount you would like to invest in dollars(i.e. 2000): ");
+    JLabel l = new JLabel(
+        "Please list the amount you would like to invest in dollars(i.e. 2000): ");
     JButton b = new JButton("Enter");
     b.addActionListener(this);
     JTextField t = new JTextField(10);
@@ -581,7 +598,7 @@ public class GUIFrame extends JFrame implements
   public void valueOfPortfolio(String portfolioName, String date, float value) {
     clear();
     JLabel l = new JLabel("Total value of " + portfolioName + " on "
-            + date + " is " + value);
+        + date + " is " + value);
 
     JButton b = new JButton("OK");
     b.addActionListener(new ActionListener() {
@@ -608,7 +625,7 @@ public class GUIFrame extends JFrame implements
   public void costBasisPortfolio(String portfolioName, String date, float value) {
     clear();
     JLabel l = new JLabel("Cost basis of " + portfolioName + " on "
-            + date + " is " + value);
+        + date + " is " + value);
 
     JButton b = new JButton("OK");
     b.addActionListener(new ActionListener() {
@@ -632,7 +649,8 @@ public class GUIFrame extends JFrame implements
     clear();
 
     JPanel radioPanel = new JPanel();
-    JLabel title = new JLabel("Would you like to view the performance over the past year, 'n' months,"
+    JLabel title = new JLabel(
+        "Would you like to view the performance over the past year, 'n' months,"
             + " or specific month?");
     mainPanel.add(title);
     radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.PAGE_AXIS));
@@ -676,7 +694,8 @@ public class GUIFrame extends JFrame implements
     clear();
 
     JPanel radioPanel = new JPanel();
-    JLabel title = new JLabel("Please specify the frequency at which you would like to buy them at...");
+    JLabel title = new JLabel(
+        "Please specify the frequency at which you would like to buy them at...");
     mainPanel.add(title);
     radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.PAGE_AXIS));
     JRadioButton[] radioButtons = new JRadioButton[3];
@@ -718,7 +737,8 @@ public class GUIFrame extends JFrame implements
   public void portfolioPerformanceYear(String portfolio, String[] names, String[] data) {
     clear();
 
-    JLabel title = new JLabel("Performance of portfolio " + portfolio + " over the past year(2022)");
+    JLabel title = new JLabel(
+        "Performance of portfolio " + portfolio + " over the past year(2022)");
     JLabel scale = new JLabel("Scale: * = $1000");
     JButton b = new JButton("OK");
     b.addActionListener(new ActionListener() {
@@ -739,7 +759,7 @@ public class GUIFrame extends JFrame implements
    * Display portfolio performance with time range of months.
    */
   public void portfolioPerformanceMonths(String portfolio, String timeRangeMonths,
-                                         String[] names, String[] data) {
+      String[] names, String[] data) {
     clear();
 
     JLabel title = new JLabel("Performance of portfolio " + portfolio + " from " + timeRangeMonths);
@@ -763,11 +783,11 @@ public class GUIFrame extends JFrame implements
    * Display portfolio performance with time range of month.
    */
   public void portfolioPerformanceMonth(String portfolio, String month,
-                                        String[] names, String[] data) {
+      String[] names, String[] data) {
     clear();
 
     JLabel title = new JLabel("Performance of portfolio " + portfolio + " during the month of "
-            + month);
+        + month);
     JLabel scale = new JLabel("Scale: * = $1000");
     JButton b = new JButton("OK");
     b.addActionListener(new ActionListener() {
@@ -853,7 +873,7 @@ public class GUIFrame extends JFrame implements
 
     JPanel radioPanel = new JPanel();
     JLabel title = new JLabel("Start month: " + months[startMonth - 1]
-            + "\nChoose an end month..");
+        + "\nChoose an end month..");
     mainPanel.add(title);
     radioPanel.setLayout(new BoxLayout(radioPanel, BoxLayout.PAGE_AXIS));
     JRadioButton[] radioButtons = new JRadioButton[months.length - startMonth];
@@ -878,11 +898,11 @@ public class GUIFrame extends JFrame implements
   /**
    * Gets action performed by radio buttons.
    *
-   * @param arg0 the event to be processed.
+   * @param arg the event to be processed.
    */
   @Override
-  public void actionPerformed(ActionEvent arg0) {
-    switch (arg0.getActionCommand()) {
+  public void actionPerformed(ActionEvent arg) {
+    switch (arg.getActionCommand()) {
       case "RB1":
       case "Buy":
       case "Y":
@@ -942,6 +962,8 @@ public class GUIFrame extends JFrame implements
         radioDisplay.setText("Option 12 was selected");
         selectedRadioButton = 12;
         break;
+      default:
+        break;
     }
   }
 
@@ -956,11 +978,11 @@ public class GUIFrame extends JFrame implements
   /**
    * Override itemStateChanged method.
    *
-   * @param arg0 the event to be processed
+   * @param arg the event to be processed
    */
   @Override
-  public void itemStateChanged(ItemEvent arg0) {
-
+  public void itemStateChanged(ItemEvent arg) {
+    // item state changed.
   }
 
   /**
@@ -970,6 +992,6 @@ public class GUIFrame extends JFrame implements
    */
   @Override
   public void valueChanged(ListSelectionEvent e) {
-
+    // value changed.
   }
 }

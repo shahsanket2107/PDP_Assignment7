@@ -1,15 +1,15 @@
 package view;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-
-import javax.swing.*;
-
-import model.Model;
-
 import static java.lang.Thread.sleep;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import model.Model;
+
+/**
+ * View class.
+ */
 public class ViewImpl implements View {
 
   Dialog dialog;
@@ -49,6 +49,9 @@ public class ViewImpl implements View {
     dialog = new DialogImpl(frame);
   }
 
+  /**
+   * Runs gui.
+   */
   public void runGUI() {
     frame.runSystem();
   }
@@ -103,10 +106,21 @@ public class ViewImpl implements View {
     return frame;
   }
 
+  /**
+   * Buy/Sell stocks.
+   *
+   * @param allStocks string all stocks.
+   */
   public void buySellStock(String allStocks) {
     frame.buySellStock(allStocks);
   }
 
+  /**
+   * Option of buy and sell.
+   *
+   * @return buy or sell
+   * @throws InterruptedException on interruption
+   */
   public String buySellOption() throws InterruptedException {
     int option = getOption();
     chooseOption = 0;
@@ -117,6 +131,13 @@ public class ViewImpl implements View {
     }
   }
 
+  /**
+   * Gets portfolio name.
+   *
+   * @param portfolios available portfolios
+   * @return portfolio names
+   * @throws InterruptedException on interruption.
+   */
   public String getPortfolioNew(String portfolios) throws InterruptedException {
     frame.choosePortfolioNew();
     while (choosePortfolio.equals("")) {
@@ -135,6 +156,13 @@ public class ViewImpl implements View {
     return portfolio;
   }
 
+  /**
+   * Gets portfolio.
+   *
+   * @param portfolios available portfolio names
+   * @return portfolio
+   * @throws InterruptedException on interruption
+   */
   public String getPortfolio(String portfolios) throws InterruptedException {
     if (portfolios.equals("")) {
       dialog.portfoliosNotFound();
@@ -149,6 +177,13 @@ public class ViewImpl implements View {
     return portfolio;
   }
 
+  /**
+   * Gets stock.
+   *
+   * @param list list of stocks
+   * @return stocks
+   * @throws InterruptedException on interruption
+   */
   public String getStock(ArrayList<String> list) throws InterruptedException {
     frame.chooseStock(list);
     while (chooseStock.equals("")) {
@@ -159,6 +194,13 @@ public class ViewImpl implements View {
     return stock;
   }
 
+  /**
+   * gets stock.
+   *
+   * @param stocks a string containing all the stocks
+   * @return stocks
+   * @throws InterruptedException on interruption
+   */
   public String getStock(String stocks) throws InterruptedException {
     frame.chooseStock(stocks);
     while (chooseStock.equals("")) {
@@ -169,6 +211,13 @@ public class ViewImpl implements View {
     return stock;
   }
 
+  /**
+   * Gets stocks.
+   *
+   * @param list list of stocks
+   * @return stocks
+   * @throws InterruptedException on interruption
+   */
   public String[] getStocks(ArrayList<String> list) throws InterruptedException {
     String[] result;
     frame.chooseStocks(list);
@@ -184,6 +233,13 @@ public class ViewImpl implements View {
     return result;
   }
 
+  /**
+   * Gets weights.
+   *
+   * @param stocks stocks to get weights for.
+   * @return weights.
+   * @throws InterruptedException on interruption
+   */
   public String[] getWeights(String[] stocks) throws InterruptedException {
     int totalWeights = 100;
     int weights = 0;
@@ -218,6 +274,12 @@ public class ViewImpl implements View {
     return result;
   }
 
+  /**
+   * Gets frequency.
+   *
+   * @return frequency
+   * @throws InterruptedException on interruption
+   */
   public String getFrequency() throws InterruptedException {
     frame.getFrequency();
     int option = getOption();
@@ -231,18 +293,30 @@ public class ViewImpl implements View {
     }
   }
 
+  /**
+   * Adds stocks.
+   *
+   * @return true or false
+   * @throws InterruptedException on interruption
+   */
   public boolean addStock() throws InterruptedException {
     frame.addStock();
     int option = getOption();
     chooseOption = 0;
-    if (option == 1) {
-      return true;
-    } else {
-      return false;
-    }
+    return option == 1;
   }
 
-  public String[] getPriceDate(String stockName, Model model) throws InterruptedException, FileNotFoundException {
+  /**
+   * Gets price date.
+   *
+   * @param stockName stock name
+   * @param model     the model
+   * @return price date
+   * @throws InterruptedException  on interruption
+   * @throws FileNotFoundException on file not found
+   */
+  public String[] getPriceDate(String stockName, Model model)
+      throws InterruptedException, FileNotFoundException {
     String[] result = {"-", "-"};
     chooseDate = "";
     frame.chooseDate();
@@ -269,6 +343,12 @@ public class ViewImpl implements View {
     return result;
   }
 
+  /**
+   * Gets date.
+   *
+   * @return dates
+   * @throws InterruptedException on interruption.
+   */
   public String getDate() throws InterruptedException {
     frame.chooseDate();
     while (chooseDate.equals("")) {
@@ -285,6 +365,12 @@ public class ViewImpl implements View {
     return date;
   }
 
+  /**
+   * Gets time range.
+   *
+   * @return string
+   * @throws InterruptedException on interruption
+   */
   public String getTimeRange() throws InterruptedException {
     frame.chooseStartDate();
     frame.chooseDate();
@@ -323,7 +409,17 @@ public class ViewImpl implements View {
     return startDate + "," + endDate;
   }
 
-  public String[] sellStock(String stockName, Model model) throws InterruptedException, FileNotFoundException {
+  /**
+   * sell stocks.
+   *
+   * @param stockName the name of the stock
+   * @param model     the model
+   * @return stocks
+   * @throws InterruptedException  on interruption
+   * @throws FileNotFoundException on interruption
+   */
+  public String[] sellStock(String stockName, Model model)
+      throws InterruptedException, FileNotFoundException {
     String[] result = {"-", "-", "-"};
     String[] datePrice = getPriceDate(stockName, model);
     String date = datePrice[0];
@@ -334,6 +430,12 @@ public class ViewImpl implements View {
     return result;
   }
 
+  /**
+   * Gets path.
+   *
+   * @return path
+   * @throws InterruptedException on interruption
+   */
   public String getPath() throws InterruptedException {
     frame.choosePath();
     while (choosePath.equals("")) {
@@ -371,7 +473,17 @@ public class ViewImpl implements View {
     return true;
   }
 
-  public String getNumShares(String stockName, String date, String price) throws InterruptedException {
+  /**
+   * Num shares.
+   *
+   * @param stockName name of the stock
+   * @param date      date purchased.
+   * @param price     price of the stock on the date
+   * @return num shares.
+   * @throws InterruptedException on interruption
+   */
+  public String getNumShares(String stockName, String date, String price)
+      throws InterruptedException {
     chooseNumShares = "";
     frame.numberOfShares(stockName, date, price);
     while (chooseNumShares.equals("")) {
@@ -386,6 +498,12 @@ public class ViewImpl implements View {
     return chooseNumShares;
   }
 
+  /**
+   * Gets amount invest.
+   *
+   * @return string.
+   * @throws InterruptedException on interruption
+   */
   public String getAmountInvest() throws InterruptedException {
     chooseNumShares = "";
     frame.getAmountInvest();
@@ -401,6 +519,12 @@ public class ViewImpl implements View {
     return chooseNumShares;
   }
 
+  /**
+   * Gets amount frequency.
+   *
+   * @return amount f
+   * @throws InterruptedException on interruption
+   */
   public String getAmountFrequency() throws InterruptedException {
     chooseNumShares = "";
     frame.getAmountFrequency();
@@ -416,7 +540,16 @@ public class ViewImpl implements View {
     return chooseNumShares;
   }
 
-  public void viewComposition(String portfolioName, Object[][] rowData, Object[] columnNames) throws InterruptedException {
+  /**
+   * View composition.
+   *
+   * @param portfolioName name of portfolio.
+   * @param rowData       row data.
+   * @param columnNames   names of columns.
+   * @throws InterruptedException on interruption
+   */
+  public void viewComposition(String portfolioName, Object[][] rowData, Object[] columnNames)
+      throws InterruptedException {
     frame.viewComposition(portfolioName, rowData, columnNames);
     while (!chooseExit) {
       sleep(1);
@@ -424,6 +557,12 @@ public class ViewImpl implements View {
     chooseExit = false;
   }
 
+  /**
+   * Gets composition.
+   *
+   * @return s
+   * @throws InterruptedException on interruption
+   */
   public String compositionOption() throws InterruptedException {
     frame.portfolioPerformanceTimeRange();
     int option = getOption();
@@ -437,7 +576,16 @@ public class ViewImpl implements View {
     }
   }
 
-  public void portfolioPerformanceYear(String portfolio, String[] names, String[] data) throws InterruptedException {
+  /**
+   * ppy.
+   *
+   * @param portfolio the name of the portfolio
+   * @param names     the names of the stocks
+   * @param data      the data needed
+   * @throws InterruptedException on interruption
+   */
+  public void portfolioPerformanceYear(String portfolio, String[] names, String[] data)
+      throws InterruptedException {
     frame.portfolioPerformanceYear(portfolio, names, data);
     while (!chooseExit) {
       sleep(1);
@@ -445,6 +593,12 @@ public class ViewImpl implements View {
     chooseExit = false;
   }
 
+  /**
+   * gmr.
+   *
+   * @return m
+   * @throws InterruptedException on interruption
+   */
   public String getMonthRange() throws InterruptedException {
     frame.getStartMonth();
     int startMonth = getOption();
@@ -461,6 +615,12 @@ public class ViewImpl implements View {
     }
   }
 
+  /**
+   * gm.
+   *
+   * @return m
+   * @throws InterruptedException on interruption
+   */
   public String getMonth() throws InterruptedException {
     frame.getMonth();
     int month = getOption();
@@ -472,8 +632,18 @@ public class ViewImpl implements View {
     }
   }
 
-  public void portfolioPerformanceMonths(String portfolio, String portfolioPerformanceTimeRangegeMonths,
-                                         String[] names, String[] data) throws InterruptedException {
+  /**
+   * Performance.
+   *
+   * @param portfolio                             the name of the portfolio
+   * @param portfolioPerformanceTimeRangegeMonths the time-range(MM-MM)
+   * @param names                                 the names of the stocks
+   * @param data                                  the data needed
+   * @throws InterruptedException on interruption
+   */
+  public void portfolioPerformanceMonths(String portfolio,
+      String portfolioPerformanceTimeRangegeMonths,
+      String[] names, String[] data) throws InterruptedException {
     frame.portfolioPerformanceMonths(portfolio, portfolioPerformanceTimeRangegeMonths, names, data);
     while (!chooseExit) {
       sleep(1);
@@ -481,8 +651,17 @@ public class ViewImpl implements View {
     chooseExit = false;
   }
 
+  /**
+   * Portfolio performance month.
+   *
+   * @param portfolio the name of the portfolio
+   * @param month     the time-range(MM)
+   * @param names     the names of the stocks
+   * @param data      the data needed
+   * @throws InterruptedException on interruption
+   */
   public void portfolioPerformanceMonth(String portfolio, String month,
-                                        String[] names, String[] data) throws InterruptedException {
+      String[] names, String[] data) throws InterruptedException {
     frame.portfolioPerformanceMonth(portfolio, month, names, data);
     while (!chooseExit) {
       sleep(1);
@@ -490,7 +669,16 @@ public class ViewImpl implements View {
     chooseExit = false;
   }
 
-  public void valueOfPortfolio(String portfolioName, String date, float value) throws InterruptedException {
+  /**
+   * Value of portfolio.
+   *
+   * @param portfolioName the name of the portfolio
+   * @param date          the date to get value on
+   * @param value         the value
+   * @throws InterruptedException on interruption
+   */
+  public void valueOfPortfolio(String portfolioName, String date, float value)
+      throws InterruptedException {
     frame.valueOfPortfolio(portfolioName, date, value);
     while (!chooseExit) {
       sleep(1);
@@ -498,7 +686,16 @@ public class ViewImpl implements View {
     chooseExit = false;
   }
 
-  public void costBasisPortfolio(String portfolioName, String date, float value) throws InterruptedException {
+  /**
+   * Cost basis of portfolio.
+   *
+   * @param portfolioName the name of the portfolio.
+   * @param date          the date to get cost basis on
+   * @param value         the value of the portfolio
+   * @throws InterruptedException on interruption
+   */
+  public void costBasisPortfolio(String portfolioName, String date, float value)
+      throws InterruptedException {
     frame.costBasisPortfolio(portfolioName, date, value);
     while (!chooseExit) {
       sleep(1);
@@ -508,7 +705,7 @@ public class ViewImpl implements View {
 
 
   private boolean validNumber(String n)
-          throws InterruptedException {
+      throws InterruptedException {
     if (!n.matches("[0-9]+")) {
       dialog.invalidNumber();
       return false;

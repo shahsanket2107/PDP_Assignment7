@@ -11,8 +11,7 @@ public class PrintStatementImpl implements PrintStatement {
   private Scanner optionScanner;
 
   /**
-   * Constructor.
-   * Set the option scanner to a new Java scanner.
+   * Constructor. Set the option scanner to a new Java scanner.
    */
   public PrintStatementImpl() {
     optionScanner = new Scanner(System.in);
@@ -79,7 +78,7 @@ public class PrintStatementImpl implements PrintStatement {
 
   public void stockErr1(String stockName, String portfolioName) {
     System.out.println("Stock " + stockName + " already exists in portfolio "
-            + portfolioName);
+        + portfolioName);
   }
 
   public void stockErr2(String stockName) {
@@ -98,8 +97,8 @@ public class PrintStatementImpl implements PrintStatement {
    */
   public void stockSuccess(String stockName, String portfolioName) {
     System.out.println("Stock " + stockName + " successfully added to portfolio "
-            + portfolioName + ".\nWould you like to add another stock to "
-            + portfolioName + "? (y/n)");
+        + portfolioName + ".\nWould you like to add another stock to "
+        + portfolioName + "? (y/n)");
   }
 
   public void sellStock1() {
@@ -156,7 +155,7 @@ public class PrintStatementImpl implements PrintStatement {
 
   public void portfolioCreateSuccess(String portfolioName) {
     System.out.println("New portfolio " + portfolioName
-            + " has been created and saved to profile.");
+        + " has been created and saved to profile.");
   }
 
   public void portfolioLoadSuccess(String portfolioName) {
@@ -169,12 +168,12 @@ public class PrintStatementImpl implements PrintStatement {
 
   public void portfolioNotFound(String portfolioName) {
     System.out.println("Portfolio " + portfolioName + " does not exist under investor "
-            + "profile.");
+        + "profile.");
   }
 
   public void displayPortfolios(String local, String saved) {
     System.out.println("Your portfolios are:\n" + local + saved
-            + "\nChoose a portfolio or enter q to exit...");
+        + "\nChoose a portfolio or enter q to exit...");
   }
 
   public void value(String date, float value) {
@@ -207,22 +206,22 @@ public class PrintStatementImpl implements PrintStatement {
 
   public void currPrice(String stockName, String currPrice) {
     System.out.println("The current stock price of " + stockName
-            + " is $" + currPrice);
+        + " is $" + currPrice);
   }
 
   public void selectPrice() {
     System.out.println("Would you like to use this price or select from another "
-            + "date? (current / another)");
+        + "date? (current / another)");
   }
 
   public void stockDataErr(String stockName, String date) {
     System.out.println("Stock data doesn't exist for " + stockName + " on "
-            + date + ".\nChoose another date...");
+        + date + ".\nChoose another date...");
   }
 
   public void price(String stockName, String date, String price) {
     System.out.println("The stock price of " + stockName + " on "
-            + date + " is $" + price);
+        + date + " is $" + price);
   }
 
   public void costBasis(String date, float value) {
@@ -244,7 +243,8 @@ public class PrintStatementImpl implements PrintStatement {
   public void printOption(String option) {
     System.out.println("\nOption selected: " + option);
   }
-  public void printMessage(String message){
+
+  public void printMessage(String message) {
     System.out.println(message);
   }
 }

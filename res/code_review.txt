@@ -1,0 +1,109 @@
+CODE REVIEW - 
+
+I want to start by saying that they are not using AlphaVantage API and have used Kaggle dataset for the same. So they are supporting only 
+a few ticker symbols. Also, data for many dates is missing.  Also, I cannot add and remove stocks from a particular portfolio after 
+creation of the portfolio and there is no support of inflexible and flexible portfolio together. These were the basic requirements which 
+were missing.
+
+
+-> Design critique with limitations and how to address them --->
+
+They don't have a main class. Instead they have the main class in the controller. Also, they have a lot of static variables and methods 
+in the controller which is not the correct approach. 
+Instead, they should have a separate main class and pass view and model objects to the controller. That way no static variables and 
+functions would be required. 
+
+They have not done exception handling the way it should be done. There are no try-catch blocks in the controller while calling the model. 
+When an argument is invalid, no exception is thrown in their model. The correct aproach should be the model should throw exceptions 
+incase of invalid inputs and they should be get caught via the try-catch block in the controller. Their program is getting crashed at 
+several stages for eg. - during performance of a portfolio. The program just throws an exception and terminates. All exceptions should be 
+handled so that the program never crashes. They are doing e.printStackTrace() which just breaks the code.
+
+They are not supporting inflexible and flexible portfolios separately. Their design is in such a way that first we need to buy stocks of 
+a particular ticker on a particular date and then ony we can create a portfolio by adding the stocks to it. We needed to support both 
+flexible and inflexible portfolios. So one approach could be having a common interface having common methods and then flexible and 
+inflexible portfolio would implement that interface.
+
+There are a lot of interfaces and classes in View Package which seems redundant. There is no need for so many interfaces, only one or max 
+2 can sufice. And that can have methods needed for the controller.
+
+They are printing in model. In model they create a view object and call the view methods from view. That part should be done in the 
+controller. The controller calls the view object with the data returned by the model. Also in the view they are using System.out to print 
+instead of an output stream (which is more generic).
+
+
+-> Design Strength ---> 
+
+They have used Kaggle dataset to fetch the values. So as they are not hitting the API, the process is fast.
+
+
+-> Implementation critique --->
+
+My main concern is that in each and every function provided in the menu for any invalid (or valid in some cases) input, the program 
+terminates throwing an exception. THEY HAVE NOT HANDLED ANY EXCEPTION AND THE PROGRAM JUST KEEPS TERMINATING EVERY TIME. So they have not 
+tested edge cases for any methods.
+
+In MainControllerImpl there is a lot of code duplication. A private helper method could be made with all the common code and called in 
+all the places where code was duplicated. Their methods are sometimes 300 line long and all methods use repetitive code. There is also no 
+abstraction.
+
+They are not checking the date of portfolio creation properly. For example, I bought the stocks on say 5th October and I want to find the 
+value or composition on 2nd October, it should show null or 0 but it is showing according to what I bought on 5th. That check should be 
+present. In composition of portfolio in text-based on a particular date, they are not showing the quantity of stocks. Composition should 
+show which stocks are present and in how much quantity. For viewing composition in general they are showing a list of transactions 
+so nowhere in their code is the quantity of shares updated. And if a user enters a date that is on a weekend or a date for which data 
+does not exist it shows the valuation as -1 for each stock and it is multiplied with number of shares and the total valuation is shown 
+"NEGATIVE".
+
+While finding the performance of portfolio, they are asking to view the performance over the past year, 'n' months, or specific month. 
+This is incorrect, they should just ask the user for start date and end date and the plot scale should change according to that 
+difference of days between start and end date. Also the program is crashing when I choose month and write 10. They have not handled any 
+exception.
+
+Invalid dates are not checked properly. User can enter the date 32 and the program accepts it.
+
+Their determine value and cost basis is not working when I create a portfolio using dollar cost averaging and try to find it's value. It 
+gives NumberFormatException and the program terminates as usual as no exception handling is done. Inshort when the quantity of shares are 
+fractional, their value and cost-basis functions stop working.
+
+Their code supports selling stock on the date before they bought the stocks. Say for example, I bought 100 shares of aapl on 10-11-2010, 
+I can sell 50 shares on 09-11-2010 according to their code which is incorrect. They should have a check that sell date cannot be less 
+than buy date.
+
+THE MAJOR FLAW I FOUND IN THIS PROGRAM WAS I CANNOT BUY AND SELL STOCKS OF A PARTICULAR PORTFOLIO. THEY ARE DOING IT IN A WAY THAT FIRST 
+USER HAS TO BUY STOCKS AND THEN CREATE PORTFOLIO BASED ON WHAT HE BOUGHT. LATER ON FOR SELLING, HE CAN NOT CHOOSE FROM WHICH PORTFOLIO HE 
+WANTS TO SELL. A USER CAN HAVE 2-3 PORTFOLIOS SO HE SHOULD BE GIVEN AN OPTION TO CHOOSE FROM WHICH PORTFOLIO HE WANTS TO BUY/SELL STOCK 
+BUT THAT IS NOT DONE HERE. THE WAY IT SHOULD BE DONE IS USER SHOULD BE ASKED THE PORTFOLIO NAME FIRST AND THEN BASED ON THE COMPOSITION 
+OF THAT PORTFOLIO, BUY/SELL TRANSACTIONS SHOULD TAKE PLACE AND UPDATE THE COMPOSITION OF THAT PARTICULAR PORTFOLIO ACCORDINGLY.
+
+The GUI is not so user-friendly. This may be in windows but for me to navigate to next thing the OK button needs to be pressed and it 
+cannot be done without maximising the screen to fullscreen.
+
+Coming to testing, the controller testing is neither done by making input stream nor done by making a mock model. In short there is no 
+controller testing for any function.
+
+
+-> Documentation critique --->
+
+The comments are not descriptive enough in testing. They have just mentioned test class for xyz and nothing else. It should be more 
+informative. Also, the test names are like testAddStock1, testAddStock2 ... which is not descriptive enough as we had experienced in 
+previous assignments. 
+
+The function length should be limited to 50 or max 60 lines but most of their functions are 100+ lines long with some of them being more than 300 lines long.
+
+Also, they had not done Javadoc properly, we had to spend considerable amount of time to fix the styling errors on handins server. There were more than 30 methods missing Javadoc comments. We had to manually add all comments for styling points on handins.
+
+
+-> Changes requested -->
+
+They were only supporting integer quantity for the shares but for rebalancing we had to store them as fractional based on their weights, 
+so the change that we requested from them involved chaning their code to support fractional number of shares.
+Also if they bought 50 shares of aapl on 10th and 60 shares of aapl on 11th then on viewing composition on 11th the num of shares were 
+getting overwritten. It showed only 60 shares of aapl on 11th. So we asked them to change it and they did change and give it to us but 
+still the data is getting overwritten.
+
+
+Conclusion -->
+
+Concluding, it was very difficult to work with their code as they has many flaws in their design and implementation. Also their tests 
+were not enough and not testing even the basic features and their program was crashing at mostly all edge cases and invalid inputs.

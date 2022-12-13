@@ -2,9 +2,7 @@ package view;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
-import javax.swing.*;
-
+import javax.swing.JFrame;
 import model.Model;
 
 /**
@@ -35,7 +33,7 @@ public interface View {
   /**
    * Buy and sell stock.
    *
-   * @param allStocks
+   * @param allStocks string
    */
   void buySellStock(String allStocks);
 
@@ -48,21 +46,13 @@ public interface View {
   String buySellOption() throws InterruptedException;
 
   /**
-   * Get the stock from frame
+   * Gets new portfolio.
    *
-   * @param list list of stocks
-   * @return the stock chosen
-   * @throws InterruptedException while thread sleeping/waiting
+   * @param portfolios portfolios
+   * @return new portfolios
+   * @throws InterruptedException on interruption
    */
-  String getStock(ArrayList<String> list) throws InterruptedException;
 
-  /**
-   * Get the portfolio name.
-   *
-   * @param portfolios available portfolios
-   * @return the name of the portfolio
-   * @throws InterruptedException while thread sleeping/waiting
-   */
   String getPortfolioNew(String portfolios) throws InterruptedException;
 
   /**
@@ -74,13 +64,23 @@ public interface View {
   String getAmountInvest() throws InterruptedException;
 
   /**
-   * Get the portfolio name
+   * Get the portfolio name.
    *
    * @param portfolios available portfolio names
    * @return the portfolio name
    * @throws InterruptedException while thread sleeping/waiting
    */
   String getPortfolio(String portfolios) throws InterruptedException;
+
+  /**
+   * Get the stock from string of purchased stocks.
+   *
+   * @param list list of stocks
+   * @return name of stock
+   * @throws InterruptedException on interruption
+   */
+  String getStock(ArrayList<String> list) throws InterruptedException;
+
 
   /**
    * Get the stock from string of purchased stocks.
@@ -117,7 +117,8 @@ public interface View {
    * @throws InterruptedException  while thread sleeping/waiting
    * @throws FileNotFoundException if stock file not found
    */
-  String[] getPriceDate(String stockName, Model model) throws InterruptedException, FileNotFoundException;
+  String[] getPriceDate(String stockName, Model model)
+      throws InterruptedException, FileNotFoundException;
 
   /**
    * Get number of shares for stock.
@@ -155,13 +156,16 @@ public interface View {
   String getAmountFrequency() throws InterruptedException;
 
   /**
+   * Sell stock.
+   *
    * @param stockName the name of the stock
    * @param model     the model
    * @return date, price, number of shares sold as an array
    * @throws InterruptedException  while thread sleeping/waiting
    * @throws FileNotFoundException stock file doesn't exist
    */
-  String[] sellStock(String stockName, Model model) throws InterruptedException, FileNotFoundException;
+  String[] sellStock(String stockName, Model model)
+      throws InterruptedException, FileNotFoundException;
 
   /**
    * Get the path.
@@ -178,7 +182,8 @@ public interface View {
    * @param rowData       row data.
    * @param columnNames   names of columns.
    */
-  void viewComposition(String portfolioName, Object[][] rowData, Object[] columnNames) throws InterruptedException;
+  void viewComposition(String portfolioName, Object[][] rowData, Object[] columnNames)
+      throws InterruptedException;
 
   /**
    * Get the correct option for the composition.
@@ -196,7 +201,8 @@ public interface View {
    * @param data      the data needed
    * @throws InterruptedException if invalid portfolio
    */
-  void portfolioPerformanceYear(String portfolio, String[] names, String[] data) throws InterruptedException;
+  void portfolioPerformanceYear(String portfolio, String[] names, String[] data)
+      throws InterruptedException;
 
   /**
    * View the portfolio performance for a range of months(MM-MM).
@@ -208,7 +214,7 @@ public interface View {
    * @throws InterruptedException if invalid portfolio
    */
   void portfolioPerformanceMonths(String portfolio, String timeRangeMonths,
-                                  String[] names, String[] data) throws InterruptedException;
+      String[] names, String[] data) throws InterruptedException;
 
   /**
    * View the portfolio performance for a month(MM).
@@ -220,7 +226,7 @@ public interface View {
    * @throws InterruptedException if invalid portfolio
    */
   void portfolioPerformanceMonth(String portfolio, String month,
-                                 String[] names, String[] data) throws InterruptedException;
+      String[] names, String[] data) throws InterruptedException;
 
   /**
    * Get the range in months.
@@ -264,7 +270,8 @@ public interface View {
    * @param value         the value of the portfolio
    * @throws InterruptedException if invalid portfolio
    */
-  void costBasisPortfolio(String portfolioName, String date, float value) throws InterruptedException;
+  void costBasisPortfolio(String portfolioName, String date, float value)
+      throws InterruptedException;
 
   /**
    * Get the weights.

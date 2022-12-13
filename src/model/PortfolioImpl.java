@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Implementation of the portfolio interface.
@@ -75,11 +74,15 @@ public class PortfolioImpl implements Portfolio {
     }
     for (int i = 0; i < portfolio.size(); i++) {
       result += portfolio.get(i).name + " " + portfolio.get(i).datePurchased + " "
-              + portfolio.get(i).priceWhenBought + " " + portfolio.get(i).numShares + " ";
+          + portfolio.get(i).priceWhenBought + " " + portfolio.get(i).numShares + " ";
     }
     return result;
   }
 
+  /**
+   * Used to examine a portfolio.
+   * @return an array
+   */
   public ArrayList<String> examinePort() {
     ArrayList<String> port = new ArrayList<>();
     if (portfolio.isEmpty()) {
@@ -88,7 +91,7 @@ public class PortfolioImpl implements Portfolio {
     for (int i = 0; i < portfolio.size(); i++) {
       String result = "";
       result += portfolio.get(i).name + "," + portfolio.get(i).datePurchased + ","
-              + portfolio.get(i).priceWhenBought + "," + portfolio.get(i).numShares;
+          + portfolio.get(i).priceWhenBought + "," + portfolio.get(i).numShares;
       port.add(result);
     }
     return port;
@@ -106,7 +109,7 @@ public class PortfolioImpl implements Portfolio {
     }
     for (int i = 0; i < portfolio.size(); i++) {
       result += portfolio.get(i).name + " "
-              + portfolio.get(i).priceWhenBought + " " + portfolio.get(i).numShares + " ";
+          + portfolio.get(i).priceWhenBought + " " + portfolio.get(i).numShares + " ";
 
     }
     return result;

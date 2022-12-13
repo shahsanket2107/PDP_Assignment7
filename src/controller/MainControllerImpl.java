@@ -171,11 +171,7 @@ public class MainControllerImpl {
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     Date temp_date1 = sdf.parse(date1);
     Date temp_date2 = sdf.parse(date2);
-    if (temp_date1.compareTo(temp_date2) >= 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return temp_date1.compareTo(temp_date2) >= 0;
   }
 
   private static ArrayList<String> getContentsTillADate(String date, ArrayList<String> contents) {
@@ -929,7 +925,7 @@ public class MainControllerImpl {
     } else {
       DisplayPortfolio portfolioFileNames = new DisplayPortfolioImpl();
       String portfolioName = view.getPortfolio(model.getAllPortfolioNames()
-          //        + portfolioFileNames.displayPortfolioFileNames(portfolioFiles)
+
       );
       if (!portfolioName.equals("")) {
         ParseFile parseFile = new ParseFileImpl();

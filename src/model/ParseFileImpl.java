@@ -122,6 +122,10 @@ public class ParseFileImpl implements ParseFile {
     return true;
   }
 
+  /**
+   * Used to get all stock names.
+   * @return array of all stock names
+   */
   public ArrayList<String> getAllStockNames() {
     File folder = new File("files/sp500/csv/");
     File[] list = folder.listFiles();

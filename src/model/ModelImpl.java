@@ -98,6 +98,13 @@ public class ModelImpl implements Model {
     investor.buyShares(stockName, numShares, datePurchased, price, text);
   }
 
+  private void buyShares(String stockName, String numShares, String datePurchased, float price,
+      float fee)
+      throws FileNotFoundException {
+    investor.buyShares(stockName, numShares, datePurchased, price, fee);
+
+  }
+
   /**
    * Get a portfolio.
    *
@@ -124,17 +131,6 @@ public class ModelImpl implements Model {
    */
   public String getAllPortfolioNames() {
     return investor.getAllPortfolioNames();
-  }
-
-  public void addMultipleStocks(String portfolioName) {
-    String option = print.readOption();
-    String allStocks = investor.getAllStockNames();
-
-    if (allStocks.equals("")) {
-      print.stocksNotFound();
-    } else {
-
-    }
   }
 
   /**
@@ -282,7 +278,12 @@ public class ModelImpl implements Model {
     }
   }
 
-
+  /**
+   * Operation to buy a stock.
+   *
+   * @param portfolioName name of the portfolio
+   * @throws FileNotFoundException when an invalid file path is provided
+   */
   public void buyStock(String portfolioName) throws FileNotFoundException {
     print.newStock();
     String stockName = print.readOption();
@@ -307,7 +308,14 @@ public class ModelImpl implements Model {
     }
   }
 
-
+  /**
+   * Used to get price of portfolio on a date.
+   *
+   * @param stockName the name of the stock
+   * @param date      the date to get the stock price on
+   * @return proce on particular date
+   * @throws FileNotFoundException when an invalid file path is provided
+   */
   public String getPriceOnDate(String stockName, String date) throws FileNotFoundException {
     print.newStock();
     print.printOption(stockName);
@@ -315,6 +323,16 @@ public class ModelImpl implements Model {
     return investor.getPrice(stockName, date);
   }
 
+  /**
+   * Checks if buy transaction was successful.
+   *
+   * @param numShares the number of shares to buy
+   * @param stockName the name of the stock to buy
+   * @param date      the date to buy the stock on
+   * @param price     the price of the stock
+   * @return 1 if shares bought successfully or -1 otherwise
+   * @throws FileNotFoundException when an invalid file path is provided
+   */
   public int buyNumberOfShares(String numShares, String stockName, String date, String price)
       throws FileNotFoundException {
     if (!numShares.matches("[0-9]+") || Float.valueOf(numShares) % 1 != 0) {
@@ -322,17 +340,6 @@ public class ModelImpl implements Model {
     }
     buyShares(stockName, numShares, date, Float.valueOf(price));
     return 1;
-  }
-
-  public void getStockPrice(String stockName) throws FileNotFoundException {
-    ParseFile newPortfolioFile = new ParseFileImpl();
-    if (!newPortfolioFile.validStock(stockName)) {
-      buyStock();
-    } else {
-      String[] datePrice = operationGetPrice(stockName);
-      String date = datePrice[0];
-      String price = datePrice[1];
-    }
   }
 
   /**
@@ -350,13 +357,6 @@ public class ModelImpl implements Model {
       print.stockErr2(stockName);
       return;
     }
-    investor.sellStock(stockName);
-  }
-
-  /**
-   * Sell shares of a stock.
-   */
-  public void sellStock(String stockName, String date) throws FileNotFoundException {
     investor.sellStock(stockName);
   }
 
@@ -382,11 +382,7 @@ public class ModelImpl implements Model {
     SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     Date temp_date1 = sdf.parse(date1);
     Date temp_date2 = sdf.parse(date2);
-    if (temp_date1.compareTo(temp_date2) >= 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return temp_date1.compareTo(temp_date2) >= 0;
   }
 
   /**
@@ -502,6 +498,11 @@ public class ModelImpl implements Model {
         + investor.getPortfolio(portfolioName).getTransactionFee(date);
   }
 
+  /**
+   * Used to parse contents.
+   * @param contents the contents of a portfolio as a string
+   * @return contents
+   */
   public String[][] parseContents(String contents) {
     String[] splitContents = contents.trim().split("\\s+");
     String[][] result = new String[splitContents.length / 4][];
@@ -676,11 +677,5 @@ public class ModelImpl implements Model {
     return result;
   }
 
-  private void buyShares(String stockName, String numShares, String datePurchased, float price,
-      float fee)
-      throws FileNotFoundException {
-    investor.buyShares(stockName, numShares, datePurchased, price, fee);
-
-  }
 
 }

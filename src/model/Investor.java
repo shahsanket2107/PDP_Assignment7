@@ -47,6 +47,9 @@ public interface Investor {
   void buyShares(String stockName, String numShares,
                  String datePurchased, float price) throws FileNotFoundException;
 
+  void buyShares(String stockName, String numShares, String datePurchased, float price, float fee)
+      throws FileNotFoundException;
+
   /**
    * Add a stock to a portfolio.
    *
@@ -101,9 +104,6 @@ public interface Investor {
    */
   String getAllPortfolioNames();
 
-  void buyShares(String stockName, String numShares, String datePurchased, float price, float fee)
-          throws FileNotFoundException;
-
   /**
    * Returns the price of given stock at a date.
    *
@@ -156,14 +156,6 @@ public interface Investor {
    * @throws FileNotFoundException when an invalid file path is provided
    */
   String[] loadPastData(String stockName) throws FileNotFoundException;
-
-  /**
-   * Check if date formatting is correct.
-   *
-   * @param date the date to check
-   * @return 1 if it matches, -1 otherwise
-   */
-  int validDate(String date);
 
   /**
    * Boolean if a string contains only digits.

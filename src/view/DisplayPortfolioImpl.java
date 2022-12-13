@@ -21,24 +21,24 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   private Investor stockPrices = new InvestorImpl();
   private StocksAPI apiAlphaVantage = new StocksAPIAlphaVantageImpl();
   private String[] months = new String[]{"01", "02", "03", "04", "05", "06",
-          "07", "08", "09", "10", "11"};
+      "07", "08", "09", "10", "11"};
   private String[] days = new String[]{"01", "02", "03", "04", "05", "06",
-          "07", "08", "09", "10", "11", "12", "13", "14", "15", "16",
-          "17", "18", "19", "20", "21", "22", "23", "24", "25", "26",
-          "27", "28", "29", "30"};
+      "07", "08", "09", "10", "11", "12", "13", "14", "15", "16",
+      "17", "18", "19", "20", "21", "22", "23", "24", "25", "26",
+      "27", "28", "29", "30"};
   private String[] monthsString = new String[]{"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-          "Jul", "Aug", "Sep", "Oct", "Nov"};
+      "Jul", "Aug", "Sep", "Oct", "Nov"};
 
   private String[] calculatePerformanceStars(Portfolio portfolio,
-                                             ArrayList<InvestorImpl.InvestorStock> stocks,
-                                             String[] months, String[] stars) {
+      ArrayList<InvestorImpl.InvestorStock> stocks,
+      String[] months, String[] stars) {
     for (int j = 0; j < months.length; j++) {
       float totalValue = 0;
       for (int i = 0; i < stocks.size(); i++) {
         String stockName = stocks.get(i).name;
         int numShares = (int) portfolio.getShares(stockName);
         String price = apiAlphaVantage.getPrice(stockName,
-                "2022-" + months[j], "monthly");
+            "2022-" + months[j], "monthly");
         if (price != null) {
           totalValue += (Float.parseFloat(price) * numShares);
         }
@@ -49,19 +49,19 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   }
 
   private String[] calculatePerformanceStarsDaily(Portfolio portfolio,
-                                                  ArrayList<InvestorImpl.InvestorStock> stocks,
-                                                  String[] months,
-                                                  String[] starsDaily,
-                                                  String[] days,
-                                                  int monthIndex) {
+      ArrayList<InvestorImpl.InvestorStock> stocks,
+      String[] months,
+      String[] starsDaily,
+      String[] days,
+      int monthIndex) {
     for (int j = 0; j < days.length; j++) {
       float totalValue = 0;
       for (int i = 0; i < stocks.size(); i++) {
         String stockName = stocks.get(i).name;
         int numShares = (int) portfolio.getShares(stockName);
         String price = apiAlphaVantage.getPrice(stockName,
-                "2022-" + months[monthIndex] + "-" + days[j],
-                "daily");
+            "2022-" + months[monthIndex] + "-" + days[j],
+            "daily");
         if (Float.parseFloat(price) == -1) {
           price = "1";
         }
@@ -73,15 +73,15 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   }
 
   private String[] calculatePerformanceStarsPort(ArrayList<String> stocksPort,
-                                                 ArrayList<String> numSharesArr,
-                                                 String[] months, String[] stars) {
+      ArrayList<String> numSharesArr,
+      String[] months, String[] stars) {
     for (int j = 0; j < months.length; j++) {
       float totalValue = 0;
       for (int i = 0; i < stocksPort.size(); i++) {
         String stockName = stocksPort.get(i);
         int numShares = Integer.parseInt(numSharesArr.get(i));
         String price = apiAlphaVantage.getPrice(stockName,
-                "2022-" + months[j], "monthly");
+            "2022-" + months[j], "monthly");
         totalValue += (Float.parseFloat(price) * numShares);
       }
       stars[j] = "*".repeat((int) (totalValue / 1000));
@@ -90,18 +90,18 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   }
 
   private String[] calculatePerformanceStarsDailyPort(ArrayList<String> stocksPort,
-                                                      ArrayList<String> numSharesArr,
-                                                      String[] months, String[] starsDaily,
-                                                      String[] days,
-                                                      int monthIndex) {
+      ArrayList<String> numSharesArr,
+      String[] months, String[] starsDaily,
+      String[] days,
+      int monthIndex) {
     for (int j = 0; j < days.length; j++) {
       float totalValue = 0;
       for (int i = 0; i < stocksPort.size(); i++) {
         String stockName = stocksPort.get(i);
         int numShares = Integer.parseInt(numSharesArr.get(i));
         String price = apiAlphaVantage.getPrice(stockName,
-                "2022-" + months[monthIndex] + "-" + days[j],
-                "daily");
+            "2022-" + months[monthIndex] + "-" + days[j],
+            "daily");
         if (Float.parseFloat(price) == -1) {
           price = "1";
         }
@@ -115,7 +115,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
 
   @Override
   public String[][] portfolioPerformanceData(Portfolio portfolio, ArrayList<String> contents,
-                                             String namePort, String timeRange) {
+      String namePort, String timeRange) {
     String[] stars = new String[11];
     String[] starsDaily = new String[30];
     String[][] result = new String[2][];
@@ -172,10 +172,10 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       int monthIndex = Integer.parseInt(timeRange) - 1;
       if (contents == null) {
         calculatePerformanceStarsDaily(portfolio, stocks, months,
-                starsDaily, days, monthIndex);
+            starsDaily, days, monthIndex);
       } else {
         calculatePerformanceStarsDailyPort(stocksPort, numShares, months,
-                starsDaily, days, monthIndex);
+            starsDaily, days, monthIndex);
       }
       String[] names = new String[days.length];
       String[] data = new String[days.length];
@@ -192,7 +192,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
 
   @Override
   public void displayPortfolioPerformance(Portfolio portfolio, ArrayList<String> contents,
-                                          String namePort, String timeRange) {
+      String namePort, String timeRange) {
     String[] stars = new String[11];
     String[] starsDaily = new String[30];
     String name = "";
@@ -228,7 +228,7 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       String monthBeginning = monthsRange[0];
       String monthEnd = monthsRange[1];
       System.out.println("Performance of portfolio " + name + " from " + monthBeginning + "/2022"
-              + " to " + monthEnd + "/2022");
+          + " to " + monthEnd + "/2022");
       ArrayList<Integer> rangeVals = new ArrayList<>();
       for (int i = Integer.parseInt(monthBeginning) - 1; i < Integer.parseInt(monthEnd); i++) {
         rangeVals.add(i);
@@ -240,13 +240,13 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
     } else if (timeRange.matches("\\d{2}")) {
       int monthIndex = Integer.parseInt(timeRange) - 1;
       System.out.println("Performance of portfolio " + name + " during the month of "
-              + monthsString[monthIndex]);
+          + monthsString[monthIndex]);
       if (contents == null) {
         calculatePerformanceStarsDaily(portfolio, stocks, months,
-                starsDaily, days, monthIndex);
+            starsDaily, days, monthIndex);
       } else {
         calculatePerformanceStarsDailyPort(stocksPort, numShares, months,
-                starsDaily, days, monthIndex);
+            starsDaily, days, monthIndex);
       }
       for (int i = 0; i < days.length; i++) {
         System.out.println(months[monthIndex] + "/" + days[i] + "/2022: " + starsDaily[i]);
@@ -271,9 +271,9 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   @Override
   public void displayContents(ArrayList<String> contents) {
     System.out.printf("%-20s %20s %20s %20s %n", "TICKER|", "DATE PURCHASED|",
-            "STOCK PRICE|", "# OF SHARES|");
+        "STOCK PRICE|", "# OF SHARES|");
     System.out.print("---------------------------------------------"
-            + "--------------------------------------");
+        + "--------------------------------------");
     for (int i = 0; i < contents.size(); i++) {
       System.out.println();
       String[] currStrings = contents.get(i).split(",");
@@ -287,17 +287,6 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
       }
     }
     System.out.println();
-  }
-
-  private boolean dateCompare(String date1, String date2) throws ParseException {
-    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-    Date temp_date1 = sdf.parse(date1);
-    Date temp_date2 = sdf.parse(date2);
-    if (temp_date1.compareTo(temp_date2) >= 0) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   @Override
@@ -369,9 +358,9 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
   @Override
   public void displayContents(String contents) {
     System.out.printf("%-20s %20s %20s %20s %n", "TICKER|", "DATE PURCHASED|",
-            "STOCK PRICE|", "# OF SHARES|");
+        "STOCK PRICE|", "# OF SHARES|");
     System.out.print("---------------------------------------------------"
-            + "--------------------------------");
+        + "--------------------------------");
     System.out.println();
     String[] splitContents = contents.trim().split("\\s+");
     System.out.printf("%-20s", splitContents[0]);
@@ -387,6 +376,14 @@ public class DisplayPortfolioImpl implements DisplayPortfolio {
     System.out.println();
 
   }
+
+  private boolean dateCompare(String date1, String date2) throws ParseException {
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+    Date temp_date1 = sdf.parse(date1);
+    Date temp_date2 = sdf.parse(date2);
+    return temp_date1.compareTo(temp_date2) >= 0;
+  }
+
 
   @Override
   public String[] columnNames() {
