@@ -614,11 +614,11 @@ public class ModelImpl implements Model {
       try {
         price = investor.getPrice(stockName, date);
       } catch (IOException e) {
-        price = "1";
+        throw new IllegalArgumentException("Data for this date does not exists!!");
       }
       float amtForStock = Float.parseFloat(amount) * (Float.parseFloat(weights[k++]) / 100);
       if (price.equals("-1")) {
-        price = "1";
+        throw new IllegalArgumentException("Data for this date does not exists!!");
       }
       float numShares = (amtForStock / Float.parseFloat(price));
       investor.updateStock(stockName, String.valueOf(numShares), date, Float.parseFloat(price));
